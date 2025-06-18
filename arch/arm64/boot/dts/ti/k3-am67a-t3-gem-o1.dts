@@ -715,14 +715,13 @@
 &main_uart6 {
 	symlink = "board/bluetooth/uart";
 	pinctrl-names = "default";
-	pinctrl-0 = <&main_uart6_pins_default>;
+	pinctrl-0 = <&main_uart6_pins_default &bt_pins>;
 	bootph-all;
 	status = "okay";
-
+	uart-has-rtscts;
 	bluetooth {
-		compatible = "ti,cc33xx-bt";
-		cc33xx-supply = <&wlan_en>;
-		max-speed = <115200>;
+		compatible = "ti,wl1835-st";
+		enable-gpios = <&main_gpio0 3 GPIO_ACTIVE_HIGH>;
 	};
 };
 
@@ -1078,14 +1077,18 @@ csi0_i2c: &main_i2c2 {
 	cap-power-off-card;
 	keep-power-in-suspend;
 	ti,driver-strength-ohm = <50>;
-	assigned-clocks = <&k3_clks 157 174>;
-	assigned-clock-parents = <&k3_clks 157 175>;
+	assigned-clocks = <&k3_clks 157 174>,
+	      <&k3_clks 193 0>,
+	      <&k3_clks 226 0>;
+	assigned-clock-parents = <&k3_clks 157 175>,
+	       <&k3_clks 193 1>,
+	       <&k3_clks 226 5>;
 	#address-cells = <1>;
 	#size-cells = <0>;
 	status = "okay";
 
 	wlcore: wlcore@2 {
-		compatible = "ti,cc33xx";
+		compatible = "ti,wl1835";
 		reg = <2>;
 		pinctrl-names = "default";
 		pinctrl-0 = <&wifi_wlirq_pins_default>;
