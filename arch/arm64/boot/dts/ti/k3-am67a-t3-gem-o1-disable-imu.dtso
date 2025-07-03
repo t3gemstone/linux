@@ -1,0 +1,27 @@
+// SPDX-License-Identifier: GPL-2.0-only OR MIT
+/*
+ * DT Overlay for disabling IMU if you want to use it on your own.
+ *
+ * Copyright (C) 2023 Texas Instruments Incorporated - https://www.ti.com/
+ *
+ */
+
+/dts-v1/;
+/plugin/;
+
+#include "k3-pinctrl.h"
+
+/*
+ * Helper to show loaded overlays under: /proc/device-tree/chosen/overlays/
+*/
+&{/chosen} {
+	overlays {
+		k3-am67a-t3-gem-o1-disable-imu.kernel = __TIMESTAMP__;
+	};
+};
+
+&main_i2c0 {
+	imu@6b {
+		status = "disabled";
+	};
+};

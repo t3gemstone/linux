@@ -1,0 +1,96 @@
+// SPDX-License-Identifier: GPL-2.0-only OR MIT
+/*
+ * DT Overlay for using fan with GPIO (on-off) instead of PWM (speed controlled).
+ *
+ * Copyright (C) 2023 Texas Instruments Incorporated - https://www.ti.com/
+ *
+ */
+/dts-v1/;
+/plugin/;
+
+#include "k3-pinctrl.h"
+#include <dt-bindings/gpio/gpio.h>
+#include <dt-bindings/interrupt-controller/irq.h>
+
+/ {
+    compatible = "ti,j722s-evm", "ti,j722s";
+
+    /*
+     * Helper to show loaded overlays under: /proc/device-tree/chosen/overlays/
+    */
+    fragment@0 {
+        target-path = "/chosen";
+        __overlay__ {
+            overlays {
+                k3-am67a-t3-gem-o1-gpio-fan.kernel = __TIMESTAMP__;
+            };
+        };
+    };
+
+    fragment@1 {
+        target-path = "/";
+        __overlay__ {
+            fan: cooling_fan {
+                compatible = "gpio-fan";
+                pinctrl-names = "default";
+                pinctrl-0 = <&gpio_fan_pins>;
+                fan-supply = <&vsys_5v0>;
+                gpios = <&main_gpio1 9 GPIO_ACTIVE_HIGH>;
+                gpio-fan,speed-map = <0 0>, <1 1>;
+                #cooling-cells = <2>;
+                cooling-min-state = <0>;
+                cooling-max-state = <1>;
+                interrupt-parent = <&main_gpio1>;
+                interrupts = <22 IRQ_TYPE_EDGE_FALLING>;
+                status = "okay";
+            };
+        };
+    };
+
+    fragment@2 {
+        target = <&main_pmx0>;
+        __overlay__ {
+            gpio_fan_pins: gpio-fan-pins {
+                pinctrl-single,pins = <
+                    J722S_IOPAD(0x019C, PIN_OUTPUT, 7) /* (B25) MCASP0_AXR1 FAN_GPIO */
+                    J722S_IOPAD(0x01d0, PIN_INPUT, 7)  /* (E22) UART0_CTSn.GPIO1_22 FAN_TACH */
+                >;
+            };
+        };
+    };
+
+    fragment@3 {
+        target = <&main0_thermal>;
+        __overlay__ {
+            cooling-maps {
+                map1 {
+                    trip = <&main0_active0>;
+                    cooling-device = <&fan 1 1>;
+                };
+
+                map2 {
+                    trip = <&main0_active1>;
+                    cooling-device = <&fan 1 1>;
+                };
+
+                map3 {
+                    trip = <&main0_active2>;
+                    cooling-device = <&fan 1 1>;
+                };
+            };
+        };
+    };
+
+    fragment@4 {
+        target-path = "/";
+        __overlay__ {
+            fan_control {
+                compatible = "gpio-leds";
+                fan_enable {
+                    gpios = <&main_gpio1 9 GPIO_ACTIVE_HIGH>;
+                    default-state = "on";
+                };
+            };
+        };
+    };
+};
