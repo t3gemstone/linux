@@ -1,0 +1,41 @@
+// SPDX-License-Identifier: GPL-2.0-only OR MIT
+/*
+ * DT Overlay for wkup_uart0 pins within the expansion header.
+ *
+ * Copyright (C) 2023 Texas Instruments Incorporated - https://www.ti.com/
+ *
+ */
+
+/dts-v1/;
+/plugin/;
+
+#include <dt-bindings/gpio/gpio.h>
+#include "k3-pinctrl.h"
+
+/*
+ * Helper to show loaded overlays under: /proc/device-tree/chosen/overlays/
+*/
+&{/chosen} {
+	overlays {
+		k3-am67a-t3-gem-o1-uart-ttys6.kernel = __TIMESTAMP__;
+	};
+};
+
+&main_pmx0 {
+    hat_11_hat_07_ttys6: hat-11-hat-07-ttys6 {
+		pinctrl-single,pins = <
+			J722S_IOPAD(0x198, PIN_OUTPUT, 3) /* (A26) MCASP0_AXR2.UART6_TXD */
+			J722S_IOPAD(0x09C, PIN_INPUT, 3) /* (W26) GPMC0_WAIT1.UART6_RXD */
+		>;
+    };
+};
+
+&main_uart6 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&hat_11_hat_07_ttys6>;
+	status = "okay";
+
+    bluetooth {
+        status = "disabled";
+    };
+};

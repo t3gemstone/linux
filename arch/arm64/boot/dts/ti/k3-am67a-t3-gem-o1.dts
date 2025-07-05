@@ -239,7 +239,7 @@
 			default-state = "on";
 		};
 	};
-	
+
 
 	transceiver0: can-phy0 {
 		compatible = "ti,tcan1042";
@@ -991,12 +991,12 @@ dsi0_csi1_i2c: &main_i2c0 {
 	sii9022: bridge-hdmi@3b {
 		compatible = "sil,sii9022";
 		reg = <0x3b>;
-		
+
 		pinctrl-names = "default";
 		pinctrl-0 = <&hdmi_gpio_pins_default>;
 
 		reset-gpios = <&mcu_gpio0 13 GPIO_ACTIVE_LOW>;
-		
+
 		iovcc-supply = <&vdd_3v3>;
         cvcc12-supply = <&ldo2_reg>;
 
@@ -1153,7 +1153,7 @@ csi0_i2c: &main_i2c2 {
 };
 
 &wkup_r5fss0 {
-	status = "okay";
+	status = "disabled";
 };
 
 &wkup_r5fss0_core0 {
@@ -1224,7 +1224,7 @@ csi0_i2c: &main_i2c2 {
 
 &usbss0 {
 	ti,vbus-divider;
-	status = "okay";	
+	status = "okay";
 };
 
 &usb0 {
