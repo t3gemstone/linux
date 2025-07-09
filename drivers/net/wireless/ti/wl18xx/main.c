@@ -719,7 +719,7 @@ static int wl18xx_set_clk(struct wl1271 *wl)
 	/* TODO: PG2: apparently we need to read the clk type */
 
 	ret = wl18xx_top_reg_read(wl, PRIMARY_CLK_DETECT, &clk_freq);
-	if (ret < 0)
+	if (ret < 0 || clk_freq < 0 || clk_freq >= NUM_CLOCK_CONFIGS)
 		goto out;
 
 	wl1271_debug(DEBUG_BOOT, "clock freq %d (%d, %d, %d, %d, %s)", clk_freq,
@@ -1200,6 +1200,8 @@ static void wl18xx_convert_fw_status(struct wl1271 *wl, void *raw_fw_status,
 			int_fw_status->counters.tx_released_pkts;
 	fw_status->counters.tx_lnk_free_pkts =
 			int_fw_status->counters.tx_lnk_free_pkts;
+	fw_status->counters.tx_lnk_sec_pn16 =
+			int_fw_status->counters.tx_lnk_sec_pn16;
 	fw_status->counters.tx_voice_released_blks =
 			int_fw_status->counters.tx_voice_released_blks;
 	fw_status->counters.tx_last_rate =

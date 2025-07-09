@@ -379,12 +379,16 @@ static void wl12xx_irq_update_links_status(struct wl1271 *wl,
 
 static int wlcore_fw_status(struct wl1271 *wl, struct wl_fw_status *status)
 {
+	struct wl12xx_vif *wlvifSta;
+	struct wl12xx_vif *wlvifAp;
 	struct wl12xx_vif *wlvif;
 	u32 old_tx_blk_count = wl->tx_blocks_available;
 	int avail, freed_blocks;
 	int i;
 	int ret;
 	struct wl1271_link *lnk;
+	bool isSta = false;
+	bool isAp = false;
 
 	ret = wlcore_raw_read_data(wl, REG_RAW_FW_STATUS_ADDR,
 				   wl->raw_fw_status,
@@ -410,23 +414,84 @@ static int wlcore_fw_status(struct wl1271 *wl, struct wl_fw_status *status)
 		wl->tx_pkts_freed[i] = status->counters.tx_released_pkts[i];
 	}
 
+	wl12xx_for_each_wlvif_sta(wl, wlvifSta) {
+		if (wlvifSta->sta.hlid != WL12XX_INVALID_LINK_ID) {
+			isSta = true;
+			break;
+		}
+	}
+
+	wl12xx_for_each_wlvif(wl, wlvifAp) {
+		if (wlvifAp->bss_type == BSS_TYPE_AP_BSS) {
+			isAp = true;
+			break;
+		}
+	}
 
 	for_each_set_bit(i, wl->links_map, wl->num_links) {
 		u8 diff;
+		u16 diff16;
 		lnk = &wl->links[i];
 
 		/* prevent wrap-around in freed-packets counter */
 		diff = (status->counters.tx_lnk_free_pkts[i] -
 		       lnk->prev_freed_pkts) & 0xff;
 
-		if (diff == 0)
-			continue;
+		/* prevent wrap-around in pn16 counter */
+		diff16 = (status->counters.tx_lnk_sec_pn16[i] -
+		         lnk->prev_sec_pn16) & 0xffff;
 
-		lnk->allocated_pkts -= diff;
-		lnk->prev_freed_pkts = status->counters.tx_lnk_free_pkts[i];
+		if (diff != 0)
+		{
+			lnk->allocated_pkts -= diff;
+			lnk->prev_freed_pkts = status->counters.tx_lnk_free_pkts[i];
+		}
 
-		/* accumulate the prev_freed_pkts counter */
-		lnk->total_freed_pkts += diff;
+		/* for station:
+		 * ensure pn16 is considered only after the link is authorized
+		 * Also, for recovery, wait until at least a single host generated packet is notified
+		*/
+		if ( (isSta == true) && (i == wlvifSta->sta.hlid) && (test_bit(WLVIF_FLAG_STA_AUTHORIZED, &wlvifSta->flags)) && (status->counters.tx_lnk_free_pkts[i] > 0) )
+		{
+			if ( (wlvifSta->encryption_type == KEY_TKIP) || (wlvifSta->encryption_type == KEY_AES) )
+			{
+				if (diff16 != 0)
+				{
+					lnk->prev_sec_pn16 = status->counters.tx_lnk_sec_pn16[i];
+				}
+
+				/* accumulate the prev_freed_pkts counter according to the PN from firmware */
+				lnk->total_freed_pkts += diff16;
+			}
+			else
+			{
+				/* accumulate the prev_freed_pkts counter according to the free packets count from firmware */
+				lnk->total_freed_pkts += diff;
+			}
+		}
+
+		/* for ap:
+		 * ensure pn16 is considered only after the AP is started and not during connection
+		 * Also, for recovery, wait until at least a single host generated packet is notified
+		*/
+		if ( (isAp == true) && (test_bit(i, &wlvifAp->ap.sta_hlid_map[0])) && (test_bit(WLVIF_FLAG_AP_STARTED, &wlvifAp->flags)) && (wlvifAp->inconn_count == 0) && (status->counters.tx_lnk_free_pkts[i] > 0) )
+		{
+			if ( (wlvifAp->encryption_type == KEY_TKIP) || (wlvifAp->encryption_type == KEY_AES) )
+			{
+				if (diff16 != 0)
+				{
+					lnk->prev_sec_pn16 = status->counters.tx_lnk_sec_pn16[i];
+				}
+
+				/* accumulate the prev_freed_pkts counter according to the PN from firmware */
+				lnk->total_freed_pkts += diff16;
+			}
+			else
+			{
+				/* accumulate the prev_freed_pkts counter according to the free packets count from firmware */
+				lnk->total_freed_pkts += diff;
+			}
+		}
 	}
 
 	/* prevent wrap-around in total blocks counter */
@@ -3498,6 +3563,16 @@ int wlcore_set_key(struct wl1271 *wl, enum set_key_cmd cmd,
 		u64 tx_seq = wl->links[hlid].total_freed_pkts;
 		tx_seq_32 = WL1271_TX_SECURITY_HI32(tx_seq);
 		tx_seq_16 = WL1271_TX_SECURITY_LO16(tx_seq);
+
+		/*
+		 * initialize previous prev_sec_pn16 to total_freed_pkts for reconnection cases so PN restarts counting.
+		 * apply it when UNICAST key is set.
+		 */
+		if ( ( (key_conf->cipher == WLAN_CIPHER_SUITE_TKIP) || (key_conf->cipher == WLAN_CIPHER_SUITE_CCMP) ) &&
+			(cmd == SET_KEY) && (key_conf->flags & IEEE80211_KEY_FLAG_PAIRWISE) )
+		{
+			wl->links[hlid].prev_sec_pn16 = tx_seq_16;
+		}
 	}
 
 	switch (key_conf->cipher) {
@@ -3514,6 +3589,9 @@ int wlcore_set_key(struct wl1271 *wl, enum set_key_cmd cmd,
 	case WLAN_CIPHER_SUITE_CCMP:
 		key_type = KEY_AES;
 		key_conf->flags |= IEEE80211_KEY_FLAG_PUT_IV_SPACE;
+		break;
+	case WLAN_CIPHER_SUITE_AES_CMAC:
+		key_type = KEY_IGTK;
 		break;
 	case WL1271_CIPHER_SUITE_GEM:
 		key_type = KEY_GEM;
@@ -3535,6 +3613,13 @@ int wlcore_set_key(struct wl1271 *wl, enum set_key_cmd cmd,
 		if (ret < 0) {
 			wl1271_error("Could not add or replace key");
 			return ret;
+		}
+		/*
+		 * storing ap encryption key type if it was changed
+		 */
+		if (wlvif->bss_type == BSS_TYPE_AP_BSS &&
+		    wlvif->encryption_type != key_type) {
+			wlvif->encryption_type = key_type;
 		}
 
 		/*
@@ -6145,6 +6230,7 @@ static int wl1271_init_ieee80211(struct wl1271 *wl)
 		WLAN_CIPHER_SUITE_TKIP,
 		WLAN_CIPHER_SUITE_CCMP,
 		WL1271_CIPHER_SUITE_GEM,
+		WLAN_CIPHER_SUITE_AES_CMAC,
 	};
 
 	/* The tx descriptor buffer */

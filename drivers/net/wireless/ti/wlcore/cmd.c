@@ -333,6 +333,15 @@ int wl12xx_allocate_link(struct wl1271 *wl, struct wl12xx_vif *wlvif, u8 *hlid)
 	wl->links[link].wlvif = wlvif;
 
 	/*
+	 * take the last sec_pn16 value from the current FW status.
+	 * on recovery, we might not have fw_status yet, and
+	 * tx_lnk_sec_pn16 will be NULL. check for it.
+	 */
+	if (wl->fw_status->counters.tx_lnk_sec_pn16)
+		wl->links[link].prev_sec_pn16 =
+			wl->fw_status->counters.tx_lnk_sec_pn16[link];
+
+	/*
 	 * Take saved value for total freed packets from wlvif, in case this is
 	 * recovery/resume
 	 */
@@ -360,6 +369,7 @@ void wl12xx_free_link(struct wl1271 *wl, struct wl12xx_vif *wlvif, u8 *hlid)
 
 	wl->links[*hlid].allocated_pkts = 0;
 	wl->links[*hlid].prev_freed_pkts = 0;
+	wl->links[*hlid].prev_sec_pn16 = 0;
 	wl->links[*hlid].ba_bitmap = 0;
 	eth_zero_addr(wl->links[*hlid].addr);
 
