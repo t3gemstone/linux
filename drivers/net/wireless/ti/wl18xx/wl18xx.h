@@ -13,9 +13,9 @@
 /* minimum FW required for driver */
 #define WL18XX_CHIP_VER		8
 #define WL18XX_IFTYPE_VER	9
-#define WL18XX_MAJOR_VER	WLCORE_FW_VER_IGNORE
+#define WL18XX_MAJOR_VER	1
 #define WL18XX_SUBTYPE_VER	WLCORE_FW_VER_IGNORE
-#define WL18XX_MINOR_VER	58
+#define WL18XX_MINOR_VER	0
 
 #define WL18XX_CMD_MAX_SIZE          740
 
@@ -104,6 +104,9 @@ struct wl18xx_fw_packet_counters {
 
 	/* Cumulative counter of freed packets per HLID */
 	u8 tx_lnk_free_pkts[WL18XX_MAX_LINKS];
+
+	/* PN16 of last TKIP/AES seq-num per HLID */
+	u16 tx_lnk_sec_pn16[WL18XX_MAX_LINKS];
 
 	/* Cumulative counter of released Voice memory blocks */
 	u8 tx_voice_released_blks;
