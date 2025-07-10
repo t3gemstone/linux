@@ -17,7 +17,7 @@
 */
 &{/chosen} {
 	overlays {
-		k3-am67a-t3-gem-o1-pwm-epwm1-gpio6.kernel = __TIMESTAMP__;
+		k3-am67a-t3-gem-o1-pwm-epwm1-gpio6-gpio13.kernel = __TIMESTAMP__;
 		hat-31.23010000.pwm = "k3-am67a-t3-gem-o1-pwm-epwm1-gpio6.23010000.0.GPIO6";
 		gpio6.23010000.pwm = "k3-am67a-t3-gem-o1-pwm-epwm1-gpio6.23010000.0.GPIO6";
 		hat-33.23010000.pwm = "k3-am67a-t3-gem-o1-pwm-epwm1-gpio13.23010000.1.GPIO13";
