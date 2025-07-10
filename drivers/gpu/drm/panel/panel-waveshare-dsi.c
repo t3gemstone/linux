@@ -37,7 +37,7 @@ struct ws_panel {
  * https://www.waveshare.com/product/raspberry-pi/displays/2.8inch-dsi-lcd.htm
  */
 static const struct drm_display_mode ws_panel_2_8_mode = {
-	.clock = 50000,
+	.clock = 47616000 / 1000,
 	.hdisplay = 480,
 	.hsync_start = 480 + 150,
 	.hsync_end = 480 + 150 + 50,
@@ -46,13 +46,23 @@ static const struct drm_display_mode ws_panel_2_8_mode = {
 	.vsync_start = 640 + 150,
 	.vsync_end = 640 + 150 + 50,
 	.vtotal = 640 + 150 + 50 + 150,
+
+	.crtc_clock = 47616000 / 1000,
+	.crtc_hdisplay = 480,
+	.crtc_hsync_start = 480 + 150,
+	.crtc_hsync_end = 480 + 150 + 50,
+	.crtc_htotal = 480 + 150 + 50 + 150,
+	.crtc_vdisplay = 640,
+	.crtc_vsync_start = 640 + 150,
+	.crtc_vsync_end = 640 + 150 + 50,
+	.crtc_vtotal = 640 + 150 + 50 + 150,
 };
 
 /* 3.4inch 800x800 Round
  * https://www.waveshare.com/product/displays/lcd-oled/3.4inch-dsi-lcd-c.htm
  */
 static const struct drm_display_mode ws_panel_3_4_mode = {
-	.clock = 50000,
+	.clock = 47616000 / 1000,
 	.hdisplay = 800,
 	.hsync_start = 800 + 32,
 	.hsync_end = 800 + 32 + 6,
@@ -61,13 +71,23 @@ static const struct drm_display_mode ws_panel_3_4_mode = {
 	.vsync_start = 800 + 8,
 	.vsync_end = 800 + 8 + 4,
 	.vtotal = 800 + 8 + 4 + 16,
+
+	.crtc_clock = 47616000 / 1000,
+	.crtc_hdisplay = 800,
+	.crtc_hsync_start = 800 + 32,
+	.crtc_hsync_end = 800 + 32 + 6,
+	.crtc_htotal = 800 + 32 + 6 + 120,
+	.crtc_vdisplay = 800,
+	.crtc_vsync_start = 800 + 8,
+	.crtc_vsync_end = 800 + 8 + 4,
+	.crtc_vtotal = 800 + 8 + 4 + 16,
 };
 
 /* 4.0inch 480x800
  * https://www.waveshare.com/product/raspberry-pi/displays/4inch-dsi-lcd.htm
  */
 static const struct drm_display_mode ws_panel_4_0_mode = {
-	.clock = 50000,
+	.clock = 47616000 / 1000,
 	.hdisplay = 480,
 	.hsync_start = 480 + 150,
 	.hsync_end = 480 + 150 + 100,
@@ -76,13 +96,33 @@ static const struct drm_display_mode ws_panel_4_0_mode = {
 	.vsync_start = 800 + 20,
 	.vsync_end = 800 + 20 + 100,
 	.vtotal = 800 + 20 + 100 + 20,
+
+	.crtc_clock = 47616000 / 1000,
+	.crtc_hdisplay = 480,
+	.crtc_hsync_start = 480 + 150,
+	.crtc_hsync_end = 480 + 150 + 100,
+	.crtc_htotal = 480 + 150 + 100 + 150,
+	.crtc_vdisplay = 800,
+	.crtc_vsync_start = 800 + 20,
+	.crtc_vsync_end = 800 + 20 + 100,
+	.crtc_vtotal = 800 + 20 + 100 + 20,
 };
 
 /* 7.0inch C 1024x600
  * https://www.waveshare.com/product/raspberry-pi/displays/lcd-oled/7inch-dsi-lcd-c-with-case-a.htm
  */
 static const struct drm_display_mode ws_panel_7_0_c_mode = {
-	.clock = 50000,
+	.clock = 47616000 / 1000,
+	.hdisplay = 1024,
+	.hsync_start = 1024 + 100,
+	.hsync_end = 1024 + 100 + 100,
+	.htotal = 1024 + 100 + 100 + 100,
+	.vdisplay = 600,
+	.vsync_start = 600 + 10,
+	.vsync_end = 600 + 10 + 10,
+	.vtotal = 600 + 10 + 10 + 10,
+
+	.clock = 47616000 / 1000,
 	.hdisplay = 1024,
 	.hsync_start = 1024 + 100,
 	.hsync_end = 1024 + 100 + 100,
@@ -97,7 +137,7 @@ static const struct drm_display_mode ws_panel_7_0_c_mode = {
  * https://www.waveshare.com/product/raspberry-pi/displays/7.9inch-dsi-lcd.htm
  */
 static const struct drm_display_mode ws_panel_7_9_mode = {
-	.clock = 50000,
+	.clock = 47616000 / 1000,
 	.hdisplay = 400,
 	.hsync_start = 400 + 40,
 	.hsync_end = 400 + 40 + 30,
@@ -113,7 +153,7 @@ static const struct drm_display_mode ws_panel_7_9_mode = {
  * https://www.waveshare.com/product/raspberry-pi/displays/10.1inch-dsi-lcd-c.htm
  */
 static const struct drm_display_mode ws_panel_10_1_mode = {
-	.clock = 83333,
+	.clock = 7935968256 / 100000,
 	.hdisplay = 1280,
 	.hsync_start = 1280 + 156,
 	.hsync_end = 1280 + 156 + 20,
@@ -122,13 +162,23 @@ static const struct drm_display_mode ws_panel_10_1_mode = {
 	.vsync_start = 800 + 40,
 	.vsync_end = 800 + 40 + 48,
 	.vtotal = 800 + 40 + 48 + 40,
+
+	.crtc_clock = 7935968256 / 100000,
+	.crtc_hdisplay = 1280,
+	.crtc_hsync_start = 1280 + 156,
+	.crtc_hsync_end = 1280 + 156 + 20,
+	.crtc_htotal = 1280 + 156 + 20 + 40,
+	.crtc_vdisplay = 800,
+	.crtc_vsync_start = 800 + 40,
+	.crtc_vsync_end = 800 + 40 + 48,
+	.crtc_vtotal = 800 + 40 + 48 + 40,
 };
 
 /* 11.9inch 320x1480
  * https://www.waveshare.com/product/raspberry-pi/displays/11.9inch-dsi-lcd.htm
  */
 static const struct drm_display_mode ws_panel_11_9_mode = {
-	.clock = 50000,
+	.clock = 47616000 / 1000,
 	.hdisplay = 320,
 	.hsync_start = 320 + 60,
 	.hsync_end = 320 + 60 + 60,
@@ -137,10 +187,20 @@ static const struct drm_display_mode ws_panel_11_9_mode = {
 	.vsync_start = 1480 + 60,
 	.vsync_end = 1480 + 60 + 60,
 	.vtotal = 1480 + 60 + 60 + 60,
+
+	.crtc_clock = 47616000 / 1000,
+	.crtc_hdisplay = 320,
+	.crtc_hsync_start = 320 + 60,
+	.crtc_hsync_end = 320 + 60 + 60,
+	.crtc_htotal = 320 + 60 + 60 + 60,
+	.crtc_vdisplay = 1480,
+	.crtc_vsync_start = 1480 + 60,
+	.crtc_vsync_end = 1480 + 60 + 60,
+	.crtc_vtotal = 1480 + 60 + 60 + 60,
 };
 
 static const struct drm_display_mode ws_panel_4_mode = {
-	.clock = 50000,
+	.clock = 47616000 / 1000,
 	.hdisplay = 720,
 	.hsync_start = 720 + 32,
 	.hsync_end = 720 + 32 + 200,
@@ -149,6 +209,16 @@ static const struct drm_display_mode ws_panel_4_mode = {
 	.vsync_start = 720 + 8,
 	.vsync_end = 720 + 8 + 4,
 	.vtotal = 720 + 8 + 4 + 16,
+
+	.crtc_clock = 47616000 / 1000,
+	.crtc_hdisplay = 720,
+	.crtc_hsync_start = 720 + 32,
+	.crtc_hsync_end = 720 + 32 + 200,
+	.crtc_htotal = 720 + 32 + 200 + 120,
+	.crtc_vdisplay = 720,
+	.crtc_vsync_start = 720 + 8,
+	.crtc_vsync_end = 720 + 8 + 4,
+	.crtc_vtotal = 720 + 8 + 4 + 16,
 };
 
 static struct ws_panel *panel_to_ts(struct drm_panel *panel)
