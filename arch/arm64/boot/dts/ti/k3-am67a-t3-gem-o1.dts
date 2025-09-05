@@ -218,21 +218,19 @@
 		pinctrl-0 = <&wifi_en_pins_default>;
 	};
 
-	leds {
+	leds-system {
 		compatible = "gpio-leds";
 		pinctrl-names = "default";
-		pinctrl-0 = <&led_pins_default>;
+		pinctrl-0 = <&leds_system_pins_default>;
 
 		led-0 {
-			// red PWR
-			label = "PWR";
+			label = "PWR"; // Red
 			gpios = <&main_gpio0 11 GPIO_ACTIVE_LOW>;
 			default-state = "off";
 		};
 
 		led-1 {
-			// Green ACT
-			label = "ACT";
+			label = "ACT"; // Green
 			gpios = <&main_gpio0 12 GPIO_ACTIVE_HIGH>;
 			linux,default-trigger = "heartbeat";
 			function = LED_FUNCTION_HEARTBEAT;
@@ -240,6 +238,23 @@
 		};
 	};
 
+	leds-user {
+		compatible = "gpio-leds";
+		pinctrl-names = "default";
+		pinctrl-0 = <&leds_user_pins_default>;
+
+		led-0 {
+			label = "GREEN";
+			gpios = <&main_gpio1 52 GPIO_ACTIVE_HIGH>;
+			default-state = "off";
+		};
+
+		led-1 {
+			label = "RED";
+			gpios = <&main_gpio1 53 GPIO_ACTIVE_LOW>;
+			default-state = "off";
+		};
+	};
 
 	transceiver0: can-phy0 {
 		compatible = "ti,tcan1042";
@@ -476,10 +491,17 @@
 		>;
 	};
 
-	led_pins_default: led-default-pins {
+	leds_system_pins_default: leds-system-default-pins {
 		pinctrl-single,pins = <
 			J722S_IOPAD(0x002c, PIN_OUTPUT, 7) /* (K26) OSPI0_CSn0.GPIO0_11 */
 			J722S_IOPAD(0x0030, PIN_OUTPUT, 7) /* (K23) OSPI0_CSn1.GPIO0_12 */
+		>;
+	};
+
+	leds_user_pins_default: leds-user-default-pins {
+		pinctrl-single,pins = <
+			J722S_IOPAD(0x025c, PIN_OUTPUT, 7) /* (AG24) OLDI0_A0P */
+			J722S_IOPAD(0x0260, PIN_OUTPUT, 7) /* (AF23) OLDI0_A0N */
 		>;
 	};
 
