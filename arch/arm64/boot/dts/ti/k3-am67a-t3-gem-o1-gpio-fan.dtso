@@ -80,17 +80,4 @@
             };
         };
     };
-
-    fragment@4 {
-        target-path = "/";
-        __overlay__ {
-            fan_control {
-                compatible = "gpio-leds";
-                fan_enable {
-                    gpios = <&main_gpio1 9 GPIO_ACTIVE_HIGH>;
-                    default-state = "on";
-                };
-            };
-        };
-    };
 };

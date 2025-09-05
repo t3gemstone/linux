@@ -31,7 +31,7 @@
 		mmc1 = &sdhci1;
 		mmc2 = &sdhci2;
 		rtc0 = &rtc;
-		spi0 = &spi_gpio;
+		spi0 = &mcu_spi0;
 		usb0 = &usb0;
 		usb1 = &usb1;
 		i2c1 = &mcu_i2c0;
@@ -326,25 +326,6 @@
 			gpios = <&main_gpio0 2 GPIO_ACTIVE_HIGH>;
 			default-state = "off";
 		};
-	};
-
-	spi_gpio: spi {
-		compatible = "spi-gpio";
-		#address-cells = <0x1>;
-		#size-cells = <0x0>;
-		pinctrl-names = "default";
-		pinctrl-0 = <&spi_gpio_default_pins>;
-
-		sck-gpios = <&mcu_gpio0 2 GPIO_ACTIVE_HIGH>;
-		miso-gpios = <&mcu_gpio0 4 GPIO_ACTIVE_HIGH>;
-		mosi-gpios = <&mcu_gpio0 3 GPIO_ACTIVE_HIGH>;
-
-		num-chipselects = <2>;
-		cs-gpios = <
-			&mcu_gpio0 0 GPIO_ACTIVE_HIGH
-			&mcu_gpio0 9 GPIO_ACTIVE_HIGH
-		>;
-		status = "disabled";
 	};
 };
 
@@ -717,6 +698,13 @@
 			  "", "", "GPIO23", "", "GPIO7", /* 5-9 */
 			  "GPIO24", "", "", "HDMI_RSTn", "HDMI_INTn", /* 10-14 */
 			  "", "", "GPIO3", "GPIO2", ""; /* 15-19 */
+
+	mcu_gpio0_12 {
+		gpio-hog;
+		gpios = <12 GPIO_ACTIVE_HIGH>;
+		output-low;
+		line-name = "mcu_gpio0_12";
+	};
 };
 
 &main_uart0 {
@@ -801,8 +789,8 @@
 
 	wkup_i2c0_pins_default: wkup-i2c0-default-pins {
 		pinctrl-single,pins = <
-			J722S_MCU_IOPAD(0x04c, PIN_INPUT_PULLUP, 0)	/* (C7) WKUP_I2C0_SCL */
-			J722S_MCU_IOPAD(0x050, PIN_INPUT_PULLUP, 0)	/* (C6) WKUP_I2C1_SDA */
+			J722S_MCU_IOPAD(0x04c, PIN_INPUT_PULLUP, 0) /* (C7) WKUP_I2C0_SCL */
+			J722S_MCU_IOPAD(0x050, PIN_INPUT_PULLUP, 0) /* (C6) WKUP_I2C1_SDA */
 		>;
 		bootph-all;
 	};
@@ -854,14 +842,42 @@
 		>;
 	};
 
-	spi_gpio_default_pins: spi-gpio-pins {
+	mcu_spi0_pins_default: mcu-spi0-default-pins {
 		pinctrl-single,pins = <
-			J722S_MCU_IOPAD(0x000, PIN_OUTPUT, 7)	/* (C12) MCU_SPI0_CS0.MCU_GPIO0_0 SS 0 */
-			J722S_MCU_IOPAD(0x024, PIN_OUTPUT, 7)	/* (B3) WKUP_UART0_RXD.MCU_GPIO0_9 SS 1 */
-			J722S_MCU_IOPAD(0x008, PIN_OUTPUT, 7)	/* (A9) MCU_SPI0_CLK.MCU_GPIO0_2 SCLK */
-			J722S_MCU_IOPAD(0x010, PIN_INPUT, 7)	/* (C11) MCU_SPI0_D1.MCU_GPIO0_4 MISO */
-			J722S_MCU_IOPAD(0x00C, PIN_OUTPUT, 7)	/* (B12) MCU_SPI0_D0.MCU_GPIO0_3 MOSI */
+			J722S_MCU_IOPAD(0x0004, PIN_OUTPUT, 0) /* (A10) MCU_SPI0_CS1 */
+			J722S_MCU_IOPAD(0x0034, PIN_OUTPUT, 2) /* (B2) MCU_SPI0_CS3 */
+			J722S_MCU_IOPAD(0x0008, PIN_OUTPUT, 0) /* (A9) MCU_SPI0_CLK */
+			J722S_MCU_IOPAD(0x000C, PIN_OUTPUT, 0) /* (B12) MCU_SPI0_D0 */
+			J722S_MCU_IOPAD(0x0010, PIN_INPUT, 0)  /* (C11) MCU_SPI0_D1 */
+			J722S_MCU_IOPAD(0x0030, PIN_OUTPUT, 7) /* (C3) WKUP_UART0_RTSn.MCU_GPIO0_12 */
 		>;
+		bootph-all;
+	};
+};
+
+&mcu_spi0 {
+	status = "okay";
+	pinctrl-names = "default";
+	pinctrl-0 = <&mcu_spi0_pins_default>;
+	ti,spi-num-cs = <4>;
+	ti,pindir-d0-out-d1-in;
+
+	// Need these lines to get rid of dtc warnings
+	#address-cells = <1>;
+	#size-cells = <0>;
+
+	// Connected to BMP390 pressure sensor
+	spidev@1 {
+		spi-max-frequency = <50000000>;
+		reg = <1>;
+		compatible = "rohm,dh2228fv";
+	};
+
+	// Connected to ICM-20948 IMU
+	spidev@3 {
+		spi-max-frequency = <50000000>;
+		reg = <3>;
+		compatible = "rohm,dh2228fv";
 	};
 };
 
@@ -992,14 +1008,9 @@ dsi0_csi1_i2c: &main_i2c0 {
 
 	humidity@40 {
 		symlink = "sensors/hdc2010";
-        compatible = "ti,hdc2010";
-        reg = <0x40>;
-    };
-	
-	imu@6b {
-        compatible = "st,lsm6dso";
-        reg = <0x6b>;
-    };
+		compatible = "ti,hdc2010";
+		reg = <0x40>;
+	};
 };
 
 &main_i2c1 {
@@ -1020,7 +1031,7 @@ dsi0_csi1_i2c: &main_i2c0 {
 		reset-gpios = <&mcu_gpio0 13 GPIO_ACTIVE_LOW>;
 
 		iovcc-supply = <&vdd_3v3>;
-        cvcc12-supply = <&ldo2_reg>;
+		cvcc12-supply = <&ldo2_reg>;
 
 		interrupt-parent = <&mcu_gpio0>;
 		interrupts = <14 IRQ_TYPE_EDGE_FALLING>;
@@ -1100,11 +1111,11 @@ csi0_i2c: &main_i2c2 {
 	keep-power-in-suspend;
 	ti,driver-strength-ohm = <50>;
 	assigned-clocks = <&k3_clks 157 174>,
-	      <&k3_clks 193 0>,
-	      <&k3_clks 226 0>;
+		  <&k3_clks 193 0>,
+		  <&k3_clks 226 0>;
 	assigned-clock-parents = <&k3_clks 157 175>,
-	       <&k3_clks 193 1>,
-	       <&k3_clks 226 5>;
+		   <&k3_clks 193 1>,
+		   <&k3_clks 226 5>;
 	#address-cells = <1>;
 	#size-cells = <0>;
 	status = "okay";
@@ -1220,7 +1231,7 @@ csi0_i2c: &main_i2c2 {
 
 &serdes_ln_ctrl {
 	idle-states = <J722S_SERDES0_LANE0_USB>,
-		      <J722S_SERDES1_LANE0_PCIE0_LANE0>;
+			  <J722S_SERDES1_LANE0_PCIE0_LANE0>;
 };
 
 &serdes0 {
@@ -1312,9 +1323,9 @@ csi0_i2c: &main_i2c2 {
 		 <&k3_clks 232 0>,
 		 <&k3_clks 232 4>;
 
-	assigned-clocks = <&k3_clks 241 0>,	/* DSS1-VP0 */
-			  <&k3_clks 240 0>,	/* DSS1-VP1 */
-			  <&k3_clks 245 0>;	/* DPI Output */
+	assigned-clocks = <&k3_clks 241 0>, /* DSS1-VP0 */
+			  <&k3_clks 240 0>, /* DSS1-VP1 */
+			  <&k3_clks 245 0>; /* DPI Output */
 
 	assigned-clock-parents = <&k3_clks 241 2>,	/* PLL 17 HDMI */
 				 <&k3_clks 240 1>,	/* PLL 18 DSI */
@@ -1345,13 +1356,13 @@ csi0_i2c: &main_i2c2 {
 	pinctrl-names = "default";
 	pinctrl-0 = <&main_mcasp1_pins_default>;
 	auxclk-fs-ratio = <2177>;
-	op-mode = <0>;          /* MCASP_IIS_MODE */
+	op-mode = <0>;			/* MCASP_IIS_MODE */
 	tdm-slots = <2>;
-	serial-dir = <  /* 0: INACTIVE, 1: TX, 2: RX */
-	       1 0 0 0
-	       0 0 0 0
-	       0 0 0 0
-	       0 0 0 0
+	serial-dir = <	/* 0: INACTIVE, 1: TX, 2: RX */
+		   1 0 0 0
+		   0 0 0 0
+		   0 0 0 0
+		   0 0 0 0
 	>;
 	tx-num-evt = <32>;
 	rx-num-evt = <32>;

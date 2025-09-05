@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0
 /*
- * DT Overlay for spidev0.0 & spidev0.1 on T3 Gem O1 board.
+ * DT Overlay for spidev0.0 & spidev0.2 on T3 Gem O1 board.
  *
  * Copyright (C) 2023 Texas Instruments Incorporated - https://www.ti.com/
  *
@@ -10,6 +10,7 @@
 /plugin/;
 
 #include <dt-bindings/gpio/gpio.h>
+#include "k3-pinctrl.h"
 
 /*
  * Helper to show loaded overlays under: /proc/device-tree/chosen/overlays/
@@ -20,36 +21,40 @@
 	};
 };
 
-&spi_gpio {
-	compatible = "spi-gpio";
-	#address-cells = <0x1>;
-	#size-cells = <0x0>;
-	pinctrl-names = "default";
-	pinctrl-0 = <&spi_gpio_default_pins>;
+&mcu_pmx0 {
+	spidev0_pins: spidev0-pins {
+		pinctrl-single,pins = <
+			J722S_MCU_IOPAD(0x0000, PIN_OUTPUT, 0) /* (C12) MCU_SPI0_CS0 */
+			J722S_MCU_IOPAD(0x0004, PIN_OUTPUT, 0) /* (A10) MCU_SPI0_CS1 */
+			J722S_MCU_IOPAD(0x0024, PIN_OUTPUT, 2) /* (B3) MCU_SPI0_CS2 */
+			J722S_MCU_IOPAD(0x0034, PIN_OUTPUT, 2) /* (B2) MCU_SPI0_CS3 */
+			J722S_MCU_IOPAD(0x0008, PIN_OUTPUT, 0) /* (A9) MCU_SPI0_CLK */
+			J722S_MCU_IOPAD(0x000C, PIN_OUTPUT, 0) /* (B12) MCU_SPI0_D0 */
+			J722S_MCU_IOPAD(0x0010, PIN_INPUT, 0)  /* (C11) MCU_SPI0_D1 */
+			J722S_MCU_IOPAD(0x0030, PIN_OUTPUT, 7) /* (C3) WKUP_UART0_RTSn.MCU_GPIO0_12 */
+		>;
+		bootph-all;
+	};
+};
 
-	sck-gpios = <&mcu_gpio0 2 GPIO_ACTIVE_HIGH>;
-	miso-gpios = <&mcu_gpio0 4 GPIO_ACTIVE_HIGH>;
-	mosi-gpios = <&mcu_gpio0 3 GPIO_ACTIVE_HIGH>;
+&mcu_spi0 {
+	pinctrl-0 = <&spidev0_pins>;
 
-	num-chipselects = <2>;
-	cs-gpios = <
-		&mcu_gpio0 0 GPIO_ACTIVE_HIGH
-		&mcu_gpio0 9 GPIO_ACTIVE_HIGH
-	>;
+	// Need these lines to get rid of dtc warnings
+	#address-cells = <1>;
+	#size-cells = <0>;
 
-	status = "okay";
-
-	channel@0 {
-		compatible = "rohm,dh2228fv";
-
+	// HAT CS0
+	spidev@0 {
+		spi-max-frequency = <50000000>;
 		reg = <0>;
-		spi-max-frequency = <100000>;
+		compatible = "rohm,dh2228fv";
 	};
 
-	channel@1 {
+	// HAT CS1
+	spidev@2 {
+		spi-max-frequency = <50000000>;
+		reg = <2>;
 		compatible = "rohm,dh2228fv";
-
-		reg = <1>;
-		spi-max-frequency = <100000>;
 	};
 };

@@ -22,31 +22,37 @@
 };
 
 &mcu_pmx0 {
-	spi_gpio_1cs_pins: spi-gpio-1cs-pins {
+	spi0_1cs_pins: spi0-1cs-pins {
 		pinctrl-single,pins = <
-			J722S_MCU_IOPAD(0x000, PIN_OUTPUT, 7)	/* (C12) MCU_SPI0_CS0.MCU_GPIO0_0 SS 0 */
-			J722S_MCU_IOPAD(0x008, PIN_OUTPUT, 7)	/* (A9) MCU_SPI0_CLK.MCU_GPIO0_2 SCLK */
-			J722S_MCU_IOPAD(0x010, PIN_INPUT, 7)	/* (C11) MCU_SPI0_D1.MCU_GPIO0_4 MISO */
-			J722S_MCU_IOPAD(0x00C, PIN_OUTPUT, 7)	/* (B12) MCU_SPI0_D0.MCU_GPIO0_3 MOSI */
+			J722S_MCU_IOPAD(0x0000, PIN_OUTPUT, 0) /* (C12) MCU_SPI0_CS0 */
+			J722S_MCU_IOPAD(0x0004, PIN_OUTPUT, 0) /* (A10) MCU_SPI0_CS1 */
+			J722S_MCU_IOPAD(0x0034, PIN_OUTPUT, 2) /* (B2) MCU_SPI0_CS3 */
+			J722S_MCU_IOPAD(0x0008, PIN_OUTPUT, 0) /* (A9) MCU_SPI0_CLK */
+			J722S_MCU_IOPAD(0x000C, PIN_OUTPUT, 0) /* (B12) MCU_SPI0_D0 */
+			J722S_MCU_IOPAD(0x0010, PIN_INPUT, 0)  /* (C11) MCU_SPI0_D1 */
+			J722S_MCU_IOPAD(0x0030, PIN_OUTPUT, 7) /* (C3) WKUP_UART0_RTSn.MCU_GPIO0_12 */
 		>;
+		bootph-all;
 	};
 };
 
-&spi_gpio {
-	compatible = "spi-gpio";
-	#address-cells = <0x1>;
-	#size-cells = <0x0>;
-	pinctrl-names = "default";
-	pinctrl-0 = <&spi_gpio_1cs_pins>;
+&mcu_spi0 {
+	pinctrl-0 = <&spi0_1cs_pins>;
 
-	sck-gpios = <&mcu_gpio0 2 GPIO_ACTIVE_HIGH>;
-	miso-gpios = <&mcu_gpio0 4 GPIO_ACTIVE_HIGH>;
-	mosi-gpios = <&mcu_gpio0 3 GPIO_ACTIVE_HIGH>;
+	// Need these lines to get rid of dtc warnings
+	#address-cells = <1>;
+	#size-cells = <0>;
 
-	num-chipselects = <1>;
-	cs-gpios = <
-		&mcu_gpio0 0 GPIO_ACTIVE_HIGH
-	>;
+	// HAT CS0
+	spidev@0 {
+		spi-max-frequency = <50000000>;
+		reg = <0>;
+		compatible = "rohm,dh2228fv";
+	};
 
-	status = "okay";
+	// HAT CS1
+	spidev@2 {
+		reg = <2>;
+		status = "disabled";
+	};
 };
