@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0
 /*
- * DT Overlay for spi0-1cs on t3-gem-o1 board.
+ * DT Overlay for spidev0.0 & spidev0.2 on T3 Gem O1 board.
  *
  * Copyright (C) 2023 Texas Instruments Incorporated - https://www.ti.com/
  *
@@ -17,15 +17,16 @@
  */
 &{/chosen} {
 	overlays {
-		k3-am67a-t3-gem-o1-spi0-1cs.kernel = __TIMESTAMP__;
+		k3-am67a-t3-gem-o1-spidev0-2cs.kernel = __TIMESTAMP__;
 	};
 };
 
 &mcu_pmx0 {
-	spi0_1cs_pins: spi0-1cs-pins {
+	spidev0_2cs_pins: spidev0-2cs-pins {
 		pinctrl-single,pins = <
 			J722S_MCU_IOPAD(0x0000, PIN_OUTPUT, 0) /* (C12) MCU_SPI0_CS0 */
 			J722S_MCU_IOPAD(0x0004, PIN_OUTPUT, 0) /* (A10) MCU_SPI0_CS1 */
+			J722S_MCU_IOPAD(0x0024, PIN_OUTPUT, 2) /* (B3) MCU_SPI0_CS2 */
 			J722S_MCU_IOPAD(0x0034, PIN_OUTPUT, 2) /* (B2) MCU_SPI0_CS3 */
 			J722S_MCU_IOPAD(0x0008, PIN_OUTPUT, 0) /* (A9) MCU_SPI0_CLK */
 			J722S_MCU_IOPAD(0x000C, PIN_OUTPUT, 0) /* (B12) MCU_SPI0_D0 */
@@ -37,7 +38,7 @@
 };
 
 &mcu_spi0 {
-	pinctrl-0 = <&spi0_1cs_pins>;
+	pinctrl-0 = <&spidev0_2cs_pins>;
 
 	// Need these lines to get rid of dtc warnings
 	#address-cells = <1>;
@@ -52,7 +53,8 @@
 
 	// HAT CS1
 	spidev@2 {
+		spi-max-frequency = <50000000>;
 		reg = <2>;
-		status = "disabled";
+		compatible = "rohm,dh2228fv";
 	};
 };
