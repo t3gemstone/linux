@@ -699,6 +699,7 @@
 			  "GPIO24", "", "", "HDMI_RSTn", "HDMI_INTn", /* 10-14 */
 			  "", "", "GPIO3", "GPIO2", ""; /* 15-19 */
 
+	// mcu_gpio0 pin 12 is set to output-low to activate ICM-20948 IMU
 	mcu_gpio0_12 {
 		gpio-hog;
 		gpios = <12 GPIO_ACTIVE_HIGH>;
@@ -866,18 +867,16 @@
 	#address-cells = <1>;
 	#size-cells = <0>;
 
-	// Connected to BMP390 pressure sensor
 	spidev@1 {
 		spi-max-frequency = <50000000>;
 		reg = <1>;
-		compatible = "rohm,dh2228fv";
+		compatible = "bosch,bmp390-spidev";
 	};
 
-	// Connected to ICM-20948 IMU
 	spidev@3 {
 		spi-max-frequency = <50000000>;
 		reg = <3>;
-		compatible = "rohm,dh2228fv";
+		compatible = "invensense,icm20948-spidev";
 	};
 };
 
