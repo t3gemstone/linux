@@ -56,6 +56,8 @@ static const struct drm_display_mode ws_panel_2_8_mode = {
 	.crtc_vsync_start = 640 + 150,
 	.crtc_vsync_end = 640 + 150 + 50,
 	.crtc_vtotal = 640 + 150 + 50 + 150,
+
+	.flags = DRM_MODE_FLAG_NVSYNC | DRM_MODE_FLAG_NHSYNC
 };
 
 /* 3.4inch 800x800 Round
@@ -81,6 +83,8 @@ static const struct drm_display_mode ws_panel_3_4_mode = {
 	.crtc_vsync_start = 800 + 8,
 	.crtc_vsync_end = 800 + 8 + 4,
 	.crtc_vtotal = 800 + 8 + 4 + 16,
+
+	.flags = DRM_MODE_FLAG_NVSYNC | DRM_MODE_FLAG_NHSYNC
 };
 
 /* 4.0inch 480x800
@@ -106,6 +110,8 @@ static const struct drm_display_mode ws_panel_4_0_mode = {
 	.crtc_vsync_start = 800 + 20,
 	.crtc_vsync_end = 800 + 20 + 100,
 	.crtc_vtotal = 800 + 20 + 100 + 20,
+
+	.flags = DRM_MODE_FLAG_NVSYNC | DRM_MODE_FLAG_NHSYNC
 };
 
 /* 7.0inch C 1024x600
@@ -131,6 +137,8 @@ static const struct drm_display_mode ws_panel_7_0_c_mode = {
 	.crtc_vsync_start = 600 + 10,
 	.crtc_vsync_end = 600 + 10 + 10,
 	.crtc_vtotal = 600 + 10 + 10 + 10,
+
+	.flags = DRM_MODE_FLAG_NVSYNC | DRM_MODE_FLAG_NHSYNC
 };
 
 /* 7.9inch 400x1280
@@ -156,6 +164,8 @@ static const struct drm_display_mode ws_panel_7_9_mode = {
 	.crtc_vsync_start = 1280 + 20,
 	.crtc_vsync_end = 1280 + 20 + 10,
 	.crtc_vtotal = 1280 + 20 + 10 + 20,
+
+	.flags = DRM_MODE_FLAG_NVSYNC | DRM_MODE_FLAG_NHSYNC
 };
 
 /* 8.0inch or 10.1inch 1280x800
@@ -163,7 +173,7 @@ static const struct drm_display_mode ws_panel_7_9_mode = {
  * https://www.waveshare.com/product/raspberry-pi/displays/10.1inch-dsi-lcd-c.htm
  */
 static const struct drm_display_mode ws_panel_10_1_mode = {
-	.clock = 7935968256 / 100000,
+	.clock = 83297280 / 1000,
 	.hdisplay = 1280,
 	.hsync_start = 1280 + 156,
 	.hsync_end = 1280 + 156 + 20,
@@ -173,7 +183,7 @@ static const struct drm_display_mode ws_panel_10_1_mode = {
 	.vsync_end = 800 + 40 + 48,
 	.vtotal = 800 + 40 + 48 + 40,
 
-	.crtc_clock = 7935968256 / 100000,
+	.crtc_clock = 83297280 / 1000,
 	.crtc_hdisplay = 1280,
 	.crtc_hsync_start = 1280 + 156,
 	.crtc_hsync_end = 1280 + 156 + 20,
@@ -182,6 +192,8 @@ static const struct drm_display_mode ws_panel_10_1_mode = {
 	.crtc_vsync_start = 800 + 40,
 	.crtc_vsync_end = 800 + 40 + 48,
 	.crtc_vtotal = 800 + 40 + 48 + 40,
+
+	.flags = DRM_MODE_FLAG_NVSYNC | DRM_MODE_FLAG_NHSYNC
 };
 
 /* 11.9inch 320x1480
@@ -207,6 +219,8 @@ static const struct drm_display_mode ws_panel_11_9_mode = {
 	.crtc_vsync_start = 1480 + 60,
 	.crtc_vsync_end = 1480 + 60 + 60,
 	.crtc_vtotal = 1480 + 60 + 60 + 60,
+	
+	.flags = DRM_MODE_FLAG_NVSYNC | DRM_MODE_FLAG_NHSYNC
 };
 
 static const struct drm_display_mode ws_panel_4_mode = {
@@ -229,6 +243,8 @@ static const struct drm_display_mode ws_panel_4_mode = {
 	.crtc_vsync_start = 720 + 8,
 	.crtc_vsync_end = 720 + 8 + 4,
 	.crtc_vtotal = 720 + 8 + 4 + 16,
+
+	.flags = DRM_MODE_FLAG_NVSYNC | DRM_MODE_FLAG_NHSYNC
 };
 
 static struct ws_panel *panel_to_ts(struct drm_panel *panel)
