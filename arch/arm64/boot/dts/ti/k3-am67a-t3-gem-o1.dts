@@ -513,7 +513,7 @@
 
 	mcan0_gpio_pins_default: mcan0-gpio-default-pins {
 		pinctrl-single,pins = <
-			J722S_MCU_IOPAD(0x0034, PIN_OUTPUT, 7) /* (K22) MAIN_GPIO0_13 */
+			J722S_IOPAD(0x0034, PIN_OUTPUT, 7) /* (K22) MAIN_GPIO0_13 */
 		>;
 	};
 
@@ -805,7 +805,7 @@
 	hdmi_gpio_pins_default: hdmi-gpio-default-pins {
 		pinctrl-single,pins = <
 			J722S_MCU_IOPAD(0x0038, PIN_INPUT_PULLUP | PIN_DEBOUNCE_CONF6, 7) /* (D8) MCU_MCAN0_RX.MCU_GPIO0_14 HDMI_INTn */
-			J722S_MCU_IOPAD(0x0034, PIN_OUTPUT_PULLUP, 7) /* (B2) MCU_MCAN0_TX.MCU_GPIO0_13 HDMI_RSTn */
+			J722S_MCU_IOPAD(0x002c, PIN_OUTPUT_PULLUP, 7) /* (C4) WKUP_UART0_CTSn.MCU_GPIO0_11 */
 		>;
 	};
 
@@ -867,13 +867,13 @@
 	#address-cells = <1>;
 	#size-cells = <0>;
 
-	spidev@1 {
+	pressure@1 {
 		spi-max-frequency = <50000000>;
 		reg = <1>;
 		compatible = "bosch,bmp390-spidev";
 	};
 
-	spidev@3 {
+	imu@3 {
 		spi-max-frequency = <50000000>;
 		reg = <3>;
 		compatible = "invensense,icm20948-spidev";
@@ -905,9 +905,9 @@
 	bootph-all;
 	status = "okay";
 
-	tps65219: pmic@30 {
+	tps65219: pmic@40 {
 		compatible = "ti,tps65219";
-		reg = <0x30>;
+		reg = <0x40>;
 		buck1-supply = <&vsys_5v0>;
 		buck2-supply = <&vsys_5v0>;
 		buck3-supply = <&vsys_5v0>;
@@ -1005,10 +1005,10 @@ dsi0_csi1_i2c: &main_i2c0 {
 	clock-frequency = <100000>;
 	bootph-all;
 
-	humidity@40 {
+	humidity@41 {
 		symlink = "sensors/hdc2010";
 		compatible = "ti,hdc2010";
-		reg = <0x40>;
+		reg = <0x41>;
 	};
 };
 
@@ -1027,7 +1027,7 @@ dsi0_csi1_i2c: &main_i2c0 {
 		pinctrl-names = "default";
 		pinctrl-0 = <&hdmi_gpio_pins_default>;
 
-		reset-gpios = <&mcu_gpio0 13 GPIO_ACTIVE_LOW>;
+		reset-gpios = <&mcu_gpio0 11 GPIO_ACTIVE_LOW>;
 
 		iovcc-supply = <&vdd_3v3>;
 		cvcc12-supply = <&ldo2_reg>;
