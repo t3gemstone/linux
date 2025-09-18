@@ -1,9 +1,8 @@
 // SPDX-License-Identifier: GPL-2.0-only OR MIT
 /*
- * DT Overlay for using fan with GPIO (on-off) instead of PWM (speed controlled).
+ * DT Overlay to configure fan as GPIO controlled (on-off) instead of PWM controlled (varying speeds).
  *
- * Copyright (C) 2023 Texas Instruments Incorporated - https://www.ti.com/
- *
+ * Copyright (C) 2025 T3 Foundation - https://www.t3vakfi.org/
  */
 /dts-v1/;
 /plugin/;

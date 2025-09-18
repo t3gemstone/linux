@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: GPL-2.0
 /**
- * DT Overlay for Waveshare 7inch touchscreen panel interfaced with DSI on
+ * DT Overlay for Waveshare 7inch touchscreen panel interfaced with DSI.
  *
  * Waveshare DSI Panel: https://www.waveshare.com/7inch-dsi-lcd-c.htm
  *
- * Copyright (C) 2025 T3 Foundation - https://www.t3vakfi.org
+ * Copyright (C) 2025 T3 Foundation - https://www.t3vakfi.org/
  */
 
 /dts-v1/;

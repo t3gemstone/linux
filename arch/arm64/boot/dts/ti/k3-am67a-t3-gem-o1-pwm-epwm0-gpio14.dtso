@@ -1,9 +1,8 @@
 // SPDX-License-Identifier: GPL-2.0-only OR MIT
 /*
- * DT Overlay for GPIO14 epwm0 connections within the expansion header.
+ * DT Overlay to use GPIO14 (PWM1) within the expansion header for EPWM0 (pwmchip3).
  *
  * Copyright (C) 2023 Texas Instruments Incorporated - https://www.ti.com/
- *
  */
 
 /dts-v1/;

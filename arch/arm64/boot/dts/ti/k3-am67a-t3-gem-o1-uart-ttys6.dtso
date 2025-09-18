@@ -1,9 +1,8 @@
 // SPDX-License-Identifier: GPL-2.0-only OR MIT
 /*
- * DT Overlay for wkup_uart0 pins within the expansion header.
+ * DT Overlay to use GPIO17 (TX) and GPIO4 (RX) within the expansion header for MAIN_UART6 (ttyS6).
  *
- * Copyright (C) 2023 Texas Instruments Incorporated - https://www.ti.com/
- *
+ * Copyright (C) 2025 T3 Foundation - https://www.t3vakfi.org/
  */
 
 /dts-v1/;
@@ -25,7 +24,7 @@
     hat_11_hat_07_ttys6: hat-11-hat-07-ttys6 {
 		pinctrl-single,pins = <
 			J722S_IOPAD(0x198, PIN_OUTPUT, 3) /* (A26) MCASP0_AXR2.UART6_TXD */
-			J722S_IOPAD(0x09C, PIN_INPUT, 3) /* (W26) GPMC0_WAIT1.UART6_RXD */
+			J722S_IOPAD(0x09c, PIN_INPUT, 3) /* (W26) GPMC0_WAIT1.UART6_RXD */
 		>;
     };
 };

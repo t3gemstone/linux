@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: GPL-2.0
 /**
- * DT Overlay for RPi 10.1inch touchscreen panel interfaced with DSI on
+ * DT Overlay for Waveshare 10.1inch touchscreen panel interfaced with DSI
  *
  * Waveshare DSI Panel: https://www.waveshare.com/product/10.1inch-dsi-lcd-c.htm
  *
- * Copyright (C) 2025 T3 Foundation - https://www.t3vakfi.org
+ * Copyright (C) 2025 T3 Foundation - https://www.t3vakfi.org/
  */
 
 /dts-v1/;
@@ -18,7 +18,7 @@
  */
 &{/chosen} {
 	overlays {
-		k3-am67a-t3-gem-o1-dsi-rpi-10-1inch-c-panel.kernel = __TIMESTAMP__;
+		k3-am67a-t3-gem-o1-dsi-waveshare-10-1inch-panel.kernel = __TIMESTAMP__;
 	};
 };
 
@@ -57,7 +57,7 @@
 	touch: goodix@14 {
 		reg = <0x14>;
 		compatible = "goodix,gt911";
-		
+
 		touchscreen-inverted-x;
 		touchscreen-swapped-x-y;
 

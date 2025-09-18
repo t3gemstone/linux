@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: GPL-2.0
 /*
- * DT Overlay for RPi Camera V2.1 on CSI0 T3 Gemstone O1 board.
- *
- * Copyright (C) 2023 Texas Instruments Incorporated - https://www.ti.com/
+ * DT Overlay for RPi Camera V2.1 interfaced with CSI0.
  *
  * Schematics: https://datasheets.raspberrypi.com/camera/camera-v2-schematics.pdf
+ *
+ * Copyright (C) 2023 Texas Instruments Incorporated - https://www.ti.com/
  */
 
 /dts-v1/;

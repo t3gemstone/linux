@@ -1,9 +1,8 @@
 // SPDX-License-Identifier: GPL-2.0-only OR MIT
 /*
- * DT Overlay for GPIO18 ecap2 connections within the expansion header.
+ * DT Overlay to use GPIO18 (PWM0) within the expansion header for ECAP2 (pwmchip2).
  *
  * Copyright (C) 2023 Texas Instruments Incorporated - https://www.ti.com/
- *
  */
 
 /dts-v1/;

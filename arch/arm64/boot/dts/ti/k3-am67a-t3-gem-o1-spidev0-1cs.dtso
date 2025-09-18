@@ -1,9 +1,8 @@
 // SPDX-License-Identifier: GPL-2.0
 /*
- * DT Overlay for spidev0.0 on T3 Gem O1 board.
+ * DT Overlay to use GPIO8 (CS0) within the expansion header for MCU_SPI0 (spidev0).
  *
- * Copyright (C) 2023 Texas Instruments Incorporated - https://www.ti.com/
- *
+ * Copyright (C) 2025 T3 Foundation - https://www.t3vakfi.org/
  */
 
 /dts-v1/;
@@ -28,7 +27,7 @@
 			J722S_MCU_IOPAD(0x0004, PIN_OUTPUT, 0) /* (A10) MCU_SPI0_CS1 */
 			J722S_MCU_IOPAD(0x0034, PIN_OUTPUT, 2) /* (B2) MCU_SPI0_CS3 */
 			J722S_MCU_IOPAD(0x0008, PIN_OUTPUT, 0) /* (A9) MCU_SPI0_CLK */
-			J722S_MCU_IOPAD(0x000C, PIN_OUTPUT, 0) /* (B12) MCU_SPI0_D0 */
+			J722S_MCU_IOPAD(0x000c, PIN_OUTPUT, 0) /* (B12) MCU_SPI0_D0 */
 			J722S_MCU_IOPAD(0x0010, PIN_INPUT, 0)  /* (C11) MCU_SPI0_D1 */
 			J722S_MCU_IOPAD(0x0030, PIN_OUTPUT, 7) /* (C3) WKUP_UART0_RTSn.MCU_GPIO0_12 */
 		>;
