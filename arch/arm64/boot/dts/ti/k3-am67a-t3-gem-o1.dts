@@ -38,7 +38,7 @@
 	};
 
 	chosen {
-		stdout-path = &main_uart1;
+		stdout-path = &main_uart0;
 	};
 
 	memory@80000000 {
@@ -609,9 +609,9 @@
 		>;
 	};
 
-	bt_pins: bt-pins {
+	bt_en_pins_default: bt-en-pins-default {
 		pinctrl-single,pins = <
-			J722S_IOPAD(0x000c, PIN_OUTPUT, 7)	/* (K27) main.gpio0_3 - BT_EN */
+			J722S_IOPAD(0x000c, PIN_OUTPUT, 7)	/* (K27) OSPI0_D0.MAIN_GPIO0_3 */
 		>;
 	};
 
@@ -671,7 +671,7 @@
 &main_gpio0 {
 	status = "okay";
 	pinctrl-names = "default";
-	gpio-line-names = "", "", "", "", "", /* 0-4 */
+	gpio-line-names = "", "", "", "BT_EN", "", /* 0-4 */
 			  "", "", "", "", "", /* 5-9 */
 			  "", "", "", "", "", /* 10-14 */
 			  "", "", "", "", "", /* 15-19 */
@@ -680,6 +680,13 @@
 			  "", "", "USB_RST", "GPIO27", "", /* 30-34 */
 			  "", "GPIO26", "", "GPIO4", "", /* 35-39 */
 			  "", "GPIO22", "GPIO25", "", ""; /* 40-44 */
+
+	main_gpio0_3 {
+		gpio-hog;
+		gpios = <3 GPIO_ACTIVE_HIGH>;
+		output-high;
+		line-name = "BT_EN";
+	};
 };
 
 &main_gpio1 {
@@ -696,7 +703,7 @@
 	pinctrl-names = "default";
 	gpio-line-names = "GPIO8", "", "GPIO11", "GPIO10", "GPIO9", /* 0-4 */
 			  "", "", "GPIO23", "", "GPIO7", /* 5-9 */
-			  "GPIO24", "", "", "HDMI_RSTn", "HDMI_INTn", /* 10-14 */
+			  "GPIO24", "HDMI_RSTn", "IMU_EN", "", "HDMI_INTn", /* 10-14 */
 			  "", "", "GPIO3", "GPIO2", ""; /* 15-19 */
 
 	// mcu_gpio0 pin 12 is set to output-low to activate ICM-20948 IMU
@@ -704,7 +711,7 @@
 		gpio-hog;
 		gpios = <12 GPIO_ACTIVE_HIGH>;
 		output-low;
-		line-name = "mcu_gpio0_12";
+		line-name = "IMU_EN";
 	};
 };
 
@@ -726,13 +733,14 @@
 &main_uart6 {
 	symlink = "board/bluetooth/uart";
 	pinctrl-names = "default";
-	pinctrl-0 = <&main_uart6_pins_default &bt_pins>;
+	pinctrl-0 = <&main_uart6_pins_default>;
 	bootph-all;
 	status = "okay";
 	uart-has-rtscts;
+
 	bluetooth {
 		compatible = "ti,wl1835-st";
-		enable-gpios = <&main_gpio0 3 GPIO_ACTIVE_HIGH>;
+		pinctrl-0 = <&bt_en_pins_default>;
 	};
 };
 
@@ -794,12 +802,6 @@
 			J722S_MCU_IOPAD(0x050, PIN_INPUT_PULLUP, 0) /* (C6) WKUP_I2C1_SDA */
 		>;
 		bootph-all;
-	};
-
-	wifi_32k_clk: mcu-clk-out-default-pins {
-		pinctrl-single,pins = <
-			J722S_MCU_IOPAD(0x0084, PIN_OUTPUT, 0) /* (F12) WKUP_CLKOUT0 */
-		>;
 	};
 
 	hdmi_gpio_pins_default: hdmi-gpio-default-pins {
@@ -980,6 +982,7 @@
 
 	eeprom@51 {
 		compatible = "atmel,24c32";
+		vcc-supply = <&vdd_3v3>;
 		reg = <0x51>;
 	};
 
@@ -1102,7 +1105,7 @@ csi0_i2c: &main_i2c2 {
 &sdhci2 {
 	vmmc-supply = <&wlan_en>;
 	pinctrl-names = "default";
-	pinctrl-0 = <&wifi_pins_default>, <&wifi_32k_clk>;
+	pinctrl-0 = <&wifi_pins_default>;
 	bus-width = <4>;
 	non-removable;
 	ti,fails-without-test-cd;
@@ -1110,11 +1113,9 @@ csi0_i2c: &main_i2c2 {
 	keep-power-in-suspend;
 	ti,driver-strength-ohm = <50>;
 	assigned-clocks = <&k3_clks 157 174>,
-		  <&k3_clks 193 0>,
-		  <&k3_clks 226 0>;
+		  <&k3_clks 193 0>;
 	assigned-clock-parents = <&k3_clks 157 175>,
-		   <&k3_clks 193 1>,
-		   <&k3_clks 226 5>;
+		   <&k3_clks 193 1>;
 	#address-cells = <1>;
 	#size-cells = <0>;
 	status = "okay";
