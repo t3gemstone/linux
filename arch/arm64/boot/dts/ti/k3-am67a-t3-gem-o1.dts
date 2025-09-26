@@ -42,8 +42,9 @@
 	};
 
 	memory@80000000 {
-		/* 2G RAM */
-		reg = <0x00000000 0x80000000 0x00000000 0x80000000>;
+		/* 4G RAM */
+		reg = <0x00000000 0x80000000 0x00000000 0x80000000>,
+		      <0x00000008 0x80000000 0x00000000 0x80000000>;
 		device_type = "memory";
 		bootph-pre-ram;
 	};
@@ -680,13 +681,6 @@
 			  "", "", "USB_RST", "GPIO27", "", /* 30-34 */
 			  "", "GPIO26", "", "GPIO4", "", /* 35-39 */
 			  "", "GPIO22", "GPIO25", "", ""; /* 40-44 */
-
-	main_gpio0_3 {
-		gpio-hog;
-		gpios = <3 GPIO_ACTIVE_HIGH>;
-		output-high;
-		line-name = "BT_EN";
-	};
 };
 
 &main_gpio1 {
@@ -740,6 +734,7 @@
 
 	bluetooth {
 		compatible = "ti,wl1835-st";
+		enable-gpios = <&main_gpio0 3 GPIO_ACTIVE_HIGH>;
 		pinctrl-0 = <&bt_en_pins_default>;
 	};
 };
