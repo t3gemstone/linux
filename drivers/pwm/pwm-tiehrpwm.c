@@ -242,28 +242,15 @@ static int ehrpwm_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
 		duty_cycles = (unsigned long)c;
 	}
 
-	/*
-	 * Period values should be same for multiple PWM channels as IP uses
-	 * same period register for multiple channels.
-	 */
+	/* Update period cycles for all channels since they share the same register */
 	for (i = 0; i < NUM_PWM_CHANNEL; i++) {
-		if (pc->period_cycles[i] &&
-				(pc->period_cycles[i] != period_cycles)) {
-			/*
-			 * Allow channel to reconfigure period if no other
-			 * channels being configured.
-			 */
-			if (i == pwm->hwpwm)
-				continue;
-
-			dev_err(chip->dev,
-				"period value conflicts with channel %u\n",
-				i);
-			return -EINVAL;
+		if (i != pwm->hwpwm && pc->period_cycles[i] != period_cycles) {
+			dev_dbg(chip->dev,
+				"ch%u period updated to %llu ns (shared register)\n",
+				i, period_ns);
 		}
+		pc->period_cycles[i] = period_cycles;
 	}
-
-	pc->period_cycles[pwm->hwpwm] = period_cycles;
 
 	/* Configure clock prescaler to support Low frequency PWM wave */
 	if (set_prescale_div(period_cycles/PERIOD_MAX, &ps_divval,
