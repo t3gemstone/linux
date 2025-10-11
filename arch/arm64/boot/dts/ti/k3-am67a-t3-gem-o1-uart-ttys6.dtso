@@ -2,6 +2,8 @@
 /*
  * DT Overlay to use GPIO17 (TX) and GPIO4 (RX) within the expansion header for MAIN_UART6 (ttyS6).
  *
+ * This overlay disables Bluetooth functionality.
+ *
  * Copyright (C) 2025 T3 Foundation - https://www.t3vakfi.org/
  */
 

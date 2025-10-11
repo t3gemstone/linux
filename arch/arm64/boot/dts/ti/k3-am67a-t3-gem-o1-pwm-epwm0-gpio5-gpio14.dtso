@@ -2,6 +2,8 @@
 /*
  * DT Overlay to use GPIO5 (PWM0) and GPIO14 (PWM1) within the expansion header for EPWM0 (pwmchip3).
  *
+ * This overlay disables TX pin of main_uart1 (GPIO14) because it conflicts with PWM1.
+ *
  * Copyright (C) 2023 Texas Instruments Incorporated - https://www.ti.com/
  */
 
@@ -31,6 +33,16 @@
 			J722S_IOPAD(0x1B0, PIN_OUTPUT, 6) /* (F24) MCASP0_ACLKR.EHRPWM0_B */
 		>;
 	};
+
+	main_uart1_pins_rx_only: main-uart1-pins-rx-only {
+		pinctrl-single,pins = <
+			J722S_IOPAD(0x01ac, PIN_INPUT, 2) /* (C27) MCASP0_AFSR.UART1_RXD */
+		>;
+	};
+};
+
+&main_uart1 {
+	pinctrl-0 = <&main_uart1_pins_rx_only>;
 };
 
 &epwm0 {
