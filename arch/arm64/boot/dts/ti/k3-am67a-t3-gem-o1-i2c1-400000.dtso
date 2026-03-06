@@ -1,0 +1,22 @@
+// SPDX-License-Identifier: GPL-2.0
+/*
+ * DT Overlay to use MCU_I2C0 (i2c-1) within the expansion header at 400000 Hz (default is 100000 Hz).
+ *
+ * Copyright (C) 2023 Texas Instruments Incorporated - https://www.ti.com/
+ */
+
+/dts-v1/;
+/plugin/;
+
+/*
+ * Helper to show loaded overlays under: /proc/device-tree/chosen/overlays/
+ */
+&{/chosen} {
+	overlays {
+		k3-am67a-t3-gem-o1-i2c1-400000.kernel = __TIMESTAMP__;
+	};
+};
+
+&mcu_i2c0 {
+	clock-frequency = <400000>;
+};

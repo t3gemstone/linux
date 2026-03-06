@@ -1,0 +1,52 @@
+// SPDX-License-Identifier: GPL-2.0-only OR MIT
+/*
+ * DT Overlay to use GPIO5 (PWM0) and GPIO14 (PWM1) within the expansion header for EPWM0 (pwmchip3).
+ *
+ * This overlay disables TX pin of main_uart1 (GPIO14) because it conflicts with PWM1.
+ *
+ * Copyright (C) 2023 Texas Instruments Incorporated - https://www.ti.com/
+ */
+
+/dts-v1/;
+/plugin/;
+
+#include <dt-bindings/gpio/gpio.h>
+#include "k3-pinctrl.h"
+
+/*
+ * Helper to show loaded overlays under: /proc/device-tree/chosen/overlays/
+*/
+&{/chosen} {
+	overlays {
+		k3-am67a-t3-gem-o1-pwm-epwm0-gpio5-gpio14.kernel = __TIMESTAMP__;
+		hat-29.23000000.pwm = "k3-am67a-t3-gem-o1-pwm-epwm0-gpio5.23000000.0.GPIO5";
+		gpio5.23000000.pwm = "k3-am67a-t3-gem-o1-pwm-epwm0-gpio5.23000000.0.GPIO5";
+		hat-08.23000000.pwm = "k3-am67a-t3-gem-o1-pwm-epwm0-gpio14.23000000.1.GPIO14";
+		gpio14.23000000.pwm = "k3-am67a-t3-gem-o1-pwm-epwm0-gpio14.23000000.1.GPIO14";
+	};
+};
+
+&main_pmx0 {
+	gpio5_gpio14_pwm: gpio5-gpio14-pwm-pins {
+		pinctrl-single,pins = <
+			J722S_IOPAD(0x1B4, PIN_OUTPUT, 2) /* (B20) SPI0_CS0.EHRPWM0_A */
+			J722S_IOPAD(0x1B0, PIN_OUTPUT, 6) /* (F24) MCASP0_ACLKR.EHRPWM0_B */
+		>;
+	};
+
+	main_uart1_pins_rx_only: main-uart1-pins-rx-only {
+		pinctrl-single,pins = <
+			J722S_IOPAD(0x01ac, PIN_INPUT, 2) /* (C27) MCASP0_AFSR.UART1_RXD */
+		>;
+	};
+};
+
+&main_uart1 {
+	pinctrl-0 = <&main_uart1_pins_rx_only>;
+};
+
+&epwm0 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&gpio5_gpio14_pwm>;
+	status = "okay";
+};
