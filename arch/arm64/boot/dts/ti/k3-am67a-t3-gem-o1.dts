@@ -746,7 +746,7 @@
 	uart-has-rtscts;
 
 	bluetooth {
-		compatible = "ti,wl1835-st";
+		compatible = "realtek,rtl8822cs-bt";
 		enable-gpios = <&main_gpio0 3 GPIO_ACTIVE_HIGH>;
 		pinctrl-0 = <&bt_en_pins_default>;
 	};
@@ -1136,15 +1136,6 @@ csi0_i2c: &main_i2c2 {
 	#address-cells = <1>;
 	#size-cells = <0>;
 	status = "okay";
-
-	wlcore: wlcore@2 {
-		compatible = "ti,wl1835";
-		reg = <2>;
-		pinctrl-names = "default";
-		pinctrl-0 = <&wifi_wlirq_pins_default>;
-		interrupt-parent = <&main_gpio0>;
-		interrupts = <5 IRQ_TYPE_EDGE_RISING>;
-	};
 };
 
 &ospi0 {
