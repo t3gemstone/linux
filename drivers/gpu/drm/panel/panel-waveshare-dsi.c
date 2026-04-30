@@ -62,12 +62,14 @@ static const struct drm_display_mode ws_panel_2_8_mode = {
 	.crtc_vsync_start = 640 + 150,
 	.crtc_vsync_end = 640 + 150 + 50,
 	.crtc_vtotal = 640 + 150 + 50 + 150,
+
+	.flags = DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC,
 };
 
 static const struct ws_panel_data ws_panel_2_8_data = {
 	.mode = &ws_panel_2_8_mode,
 	.lanes = 2,
-	.mode_flags = MIPI_DSI_MODE_VIDEO_HSE | MIPI_DSI_MODE_VIDEO | MIPI_DSI_CLOCK_NON_CONTINUOUS | DRM_MODE_FLAG_NVSYNC | DRM_MODE_FLAG_NHSYNC,
+	.mode_flags = MIPI_DSI_MODE_VIDEO_HSE | MIPI_DSI_MODE_VIDEO | MIPI_DSI_CLOCK_NON_CONTINUOUS
 };
 
 /* 3.4inch 800x800 Round
@@ -93,12 +95,14 @@ static const struct drm_display_mode ws_panel_3_4_mode = {
 	.crtc_vsync_start = 800 + 8,
 	.crtc_vsync_end = 800 + 8 + 4,
 	.crtc_vtotal = 800 + 8 + 4 + 16,
+
+	.flags = DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC,
 };
 
 static const struct ws_panel_data ws_panel_3_4_data = {
 	.mode = &ws_panel_3_4_mode,
 	.lanes = 2,
-	.mode_flags = MIPI_DSI_MODE_VIDEO_HSE | MIPI_DSI_MODE_VIDEO | MIPI_DSI_CLOCK_NON_CONTINUOUS | DRM_MODE_FLAG_NVSYNC | DRM_MODE_FLAG_NHSYNC,
+	.mode_flags = MIPI_DSI_MODE_VIDEO_HSE | MIPI_DSI_MODE_VIDEO | MIPI_DSI_CLOCK_NON_CONTINUOUS
 };
 
 /* 4.0inch 480x800
@@ -124,12 +128,14 @@ static const struct drm_display_mode ws_panel_4_0_mode = {
 	.crtc_vsync_start = 800 + 20,
 	.crtc_vsync_end = 800 + 20 + 100,
 	.crtc_vtotal = 800 + 20 + 100 + 20,
+
+	.flags = DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC,
 };
 
 static const struct ws_panel_data ws_panel_4_0_data = {
 	.mode = &ws_panel_4_0_mode,
 	.lanes = 2,
-	.mode_flags = MIPI_DSI_MODE_VIDEO_HSE | MIPI_DSI_MODE_VIDEO | MIPI_DSI_CLOCK_NON_CONTINUOUS | DRM_MODE_FLAG_NVSYNC | DRM_MODE_FLAG_NHSYNC,
+	.mode_flags = MIPI_DSI_MODE_VIDEO_HSE | MIPI_DSI_MODE_VIDEO | MIPI_DSI_CLOCK_NON_CONTINUOUS
 };
 
 /* 7.0inch C 1024x600
@@ -155,12 +161,14 @@ static const struct drm_display_mode ws_panel_7_0_c_mode = {
 	.crtc_vsync_start = 600 + 10,
 	.crtc_vsync_end = 600 + 10 + 10,
 	.crtc_vtotal = 600 + 10 + 10 + 10,
+
+	.flags = DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC,
 };
 
 static const struct ws_panel_data ws_panel_7_0_c_data = {
 	.mode = &ws_panel_7_0_c_mode,
 	.lanes = 2,
-	.mode_flags = MIPI_DSI_MODE_VIDEO_HSE | MIPI_DSI_MODE_VIDEO | MIPI_DSI_CLOCK_NON_CONTINUOUS | DRM_MODE_FLAG_NVSYNC | DRM_MODE_FLAG_NHSYNC,
+	.mode_flags = MIPI_DSI_MODE_VIDEO_HSE | MIPI_DSI_MODE_VIDEO | MIPI_DSI_CLOCK_NON_CONTINUOUS
 };
 
 /* 7.9inch 400x1280
@@ -186,12 +194,14 @@ static const struct drm_display_mode ws_panel_7_9_mode = {
 	.crtc_vsync_start = 1280 + 20,
 	.crtc_vsync_end = 1280 + 20 + 10,
 	.crtc_vtotal = 1280 + 20 + 10 + 20,
+
+	.flags = DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC,
 };
 
 static const struct ws_panel_data ws_panel_7_9_data = {
 	.mode = &ws_panel_7_9_mode,
 	.lanes = 2,
-	.mode_flags = MIPI_DSI_MODE_VIDEO_HSE | MIPI_DSI_MODE_VIDEO | MIPI_DSI_CLOCK_NON_CONTINUOUS | DRM_MODE_FLAG_NVSYNC | DRM_MODE_FLAG_NHSYNC,
+	.mode_flags = MIPI_DSI_MODE_VIDEO_HSE | MIPI_DSI_MODE_VIDEO | MIPI_DSI_CLOCK_NON_CONTINUOUS
 };
 
 /* 8.0inch or 10.1inch 1280x800
@@ -218,12 +228,14 @@ static const struct drm_display_mode ws_panel_10_1_mode = {
 	.crtc_vsync_start = 800 + 40,
 	.crtc_vsync_end = 800 + 40 + 48,
 	.crtc_vtotal = 800 + 40 + 48 + 40,
+
+	.flags = DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC,
 };
 
 static const struct ws_panel_data ws_panel_10_1_data = {
 	.mode = &ws_panel_10_1_mode,
 	.lanes = 2,
-	.mode_flags = MIPI_DSI_MODE_VIDEO_HSE | MIPI_DSI_MODE_VIDEO | MIPI_DSI_CLOCK_NON_CONTINUOUS | DRM_MODE_FLAG_NVSYNC | DRM_MODE_FLAG_NHSYNC,
+	.mode_flags = MIPI_DSI_MODE_VIDEO_HSE | MIPI_DSI_MODE_VIDEO | MIPI_DSI_CLOCK_NON_CONTINUOUS
 };
 
 /* 11.9inch 320x1480
@@ -249,12 +261,14 @@ static const struct drm_display_mode ws_panel_11_9_mode = {
 	.crtc_vsync_start = 1480 + 60,
 	.crtc_vsync_end = 1480 + 60 + 60,
 	.crtc_vtotal = 1480 + 60 + 60 + 60,
+
+	.flags = DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC,
 };
 
 static const struct ws_panel_data ws_panel_11_9_data = {
 	.mode = &ws_panel_11_9_mode,
 	.lanes = 2,
-	.mode_flags = MIPI_DSI_MODE_VIDEO_HSE | MIPI_DSI_MODE_VIDEO | MIPI_DSI_CLOCK_NON_CONTINUOUS | DRM_MODE_FLAG_NVSYNC | DRM_MODE_FLAG_NHSYNC,
+	.mode_flags = MIPI_DSI_MODE_VIDEO_HSE | MIPI_DSI_MODE_VIDEO | MIPI_DSI_CLOCK_NON_CONTINUOUS
 };
 
 static const struct drm_display_mode ws_panel_4_mode = {
@@ -277,12 +291,14 @@ static const struct drm_display_mode ws_panel_4_mode = {
 	.crtc_vsync_start = 720 + 8,
 	.crtc_vsync_end = 720 + 8 + 4,
 	.crtc_vtotal = 720 + 8 + 4 + 16,
+
+	.flags = DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC,
 };
 
 static const struct ws_panel_data ws_panel_4_data = {
 	.mode = &ws_panel_4_mode,
 	.lanes = 2,
-	.mode_flags = MIPI_DSI_MODE_VIDEO_HSE | MIPI_DSI_MODE_VIDEO | MIPI_DSI_CLOCK_NON_CONTINUOUS | DRM_MODE_FLAG_NVSYNC | DRM_MODE_FLAG_NHSYNC,
+	.mode_flags = MIPI_DSI_MODE_VIDEO_HSE | MIPI_DSI_MODE_VIDEO | MIPI_DSI_CLOCK_NON_CONTINUOUS
 };
 
 /* 5.0inch 720x1280
@@ -308,12 +324,14 @@ static const struct drm_display_mode ws_panel_5_0_mode = {
 	.crtc_vsync_start = 1280 + 20,
 	.crtc_vsync_end = 1280 + 20 + 20,
 	.crtc_vtotal = 1280 + 20 + 20 + 20,
+
+	.flags = DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC,
 };
 
 static const struct ws_panel_data ws_panel_5_0_data = {
 	.mode = &ws_panel_5_0_mode,
 	.lanes = 2,
-	.mode_flags = MIPI_DSI_MODE_VIDEO_HSE | MIPI_DSI_MODE_VIDEO | MIPI_DSI_CLOCK_NON_CONTINUOUS | DRM_MODE_FLAG_NVSYNC | DRM_MODE_FLAG_NHSYNC,
+	.mode_flags = MIPI_DSI_MODE_VIDEO_HSE | MIPI_DSI_MODE_VIDEO | MIPI_DSI_CLOCK_NON_CONTINUOUS
 };
 
 /* 6.25inch 720x1560
@@ -339,12 +357,14 @@ static const struct drm_display_mode ws_panel_6_25_mode = {
 	.crtc_vsync_start = 1560 + 20,
 	.crtc_vsync_end = 1560 + 20 + 20,
 	.crtc_vtotal = 1560 + 20 + 20 + 20,
+
+	.flags = DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC,
 };
 
 static const struct ws_panel_data ws_panel_6_25_data = {
 	.mode = &ws_panel_6_25_mode,
 	.lanes = 2,
-	.mode_flags = MIPI_DSI_MODE_VIDEO_HSE | MIPI_DSI_MODE_VIDEO | MIPI_DSI_CLOCK_NON_CONTINUOUS | DRM_MODE_FLAG_NVSYNC | DRM_MODE_FLAG_NHSYNC,
+	.mode_flags = MIPI_DSI_MODE_VIDEO_HSE | MIPI_DSI_MODE_VIDEO | MIPI_DSI_CLOCK_NON_CONTINUOUS
 };
 
 /* 8.8inch 480x1920
@@ -370,12 +390,14 @@ static const struct drm_display_mode ws_panel_8_8_mode = {
 	.crtc_vsync_start = 1920 + 20,
 	.crtc_vsync_end = 1920 + 20 + 20,
 	.crtc_vtotal = 1920 + 20 + 20 + 20,
+
+	.flags = DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC,
 };
 
 static const struct ws_panel_data ws_panel_8_8_data = {
 	.mode = &ws_panel_8_8_mode,
 	.lanes = 2,
-	.mode_flags = MIPI_DSI_MODE_VIDEO_HSE | MIPI_DSI_MODE_VIDEO | MIPI_DSI_CLOCK_NON_CONTINUOUS | DRM_MODE_FLAG_NVSYNC | DRM_MODE_FLAG_NHSYNC,
+	.mode_flags = MIPI_DSI_MODE_VIDEO_HSE | MIPI_DSI_MODE_VIDEO | MIPI_DSI_CLOCK_NON_CONTINUOUS
 };
 
 static const struct drm_display_mode ws_panel_13_3_4lane_mode = {
@@ -398,12 +420,14 @@ static const struct drm_display_mode ws_panel_13_3_4lane_mode = {
 	.crtc_vsync_start = 1080 + 4,
 	.crtc_vsync_end = 1080 + 4 + 5,
 	.crtc_vtotal = 1080 + 4 + 5 + 36,
+
+	.flags = DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC,
 };
 
 static const struct ws_panel_data ws_panel_13_3_4lane_data = {
 	.mode = &ws_panel_13_3_4lane_mode,
 	.lanes = 4,
-	.mode_flags = MIPI_DSI_MODE_VIDEO  | MIPI_DSI_MODE_LPM | DRM_MODE_FLAG_NVSYNC | DRM_MODE_FLAG_NHSYNC,
+	.mode_flags = MIPI_DSI_MODE_VIDEO  | MIPI_DSI_MODE_LPM | DRM_MODE_FLAG_NVSYNC | DRM_MODE_FLAG_NHSYNC | MIPI_DSI_MODE_VIDEO_SYNC_PULSE,
 };
 
 static const struct drm_display_mode ws_panel_13_3_2lane_mode = {
@@ -426,12 +450,14 @@ static const struct drm_display_mode ws_panel_13_3_2lane_mode = {
 	.crtc_vsync_start = 1080 + 4,
 	.crtc_vsync_end = 1080 + 4 + 5,
 	.crtc_vtotal = 1080 + 4 + 5 + 36,
+
+	.flags = DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC,
 };
 
 static const struct ws_panel_data ws_panel_13_3_2lane_data = {
 	.mode = &ws_panel_13_3_2lane_mode,
 	.lanes = 2,
-	.mode_flags = MIPI_DSI_MODE_VIDEO  | MIPI_DSI_MODE_LPM | DRM_MODE_FLAG_NVSYNC | DRM_MODE_FLAG_NHSYNC,
+	.mode_flags = MIPI_DSI_MODE_VIDEO  | MIPI_DSI_MODE_LPM | DRM_MODE_FLAG_NVSYNC | DRM_MODE_FLAG_NHSYNC | MIPI_DSI_MODE_VIDEO_SYNC_PULSE,
 };
 
 /* 7.0inch 1280x720
@@ -457,12 +483,14 @@ static const struct drm_display_mode ws_panel_7_0_h_mode = {
 	.crtc_vsync_start = 720 + 64,
 	.crtc_vsync_end = 720 + 64 + 64,
 	.crtc_vtotal = 720 + 64 + 64 + 64,
+
+	.flags = DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC,
 };
 
 static const struct ws_panel_data ws_panel_7_0_h_data = {
 	.mode = &ws_panel_7_0_h_mode,
 	.lanes = 2,
-	.mode_flags = MIPI_DSI_MODE_VIDEO_HSE | MIPI_DSI_MODE_VIDEO | MIPI_DSI_CLOCK_NON_CONTINUOUS | DRM_MODE_FLAG_NVSYNC | DRM_MODE_FLAG_NHSYNC,
+	.mode_flags = MIPI_DSI_MODE_VIDEO_HSE | MIPI_DSI_MODE_VIDEO | MIPI_DSI_CLOCK_NON_CONTINUOUS
 };
 
 static struct ws_panel *panel_to_ts(struct drm_panel *panel)
