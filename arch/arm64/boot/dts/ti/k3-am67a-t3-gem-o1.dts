@@ -924,9 +924,9 @@
 	bootph-all;
 	status = "okay";
 
-	tps65219: pmic@40 {
+	tps65219: pmic@30 {
 		compatible = "ti,tps65219";
-		reg = <0x40>;
+		reg = <0x30>;
 		buck1-supply = <&vsys_5v0>;
 		buck2-supply = <&vsys_5v0>;
 		buck3-supply = <&vsys_5v0>;
