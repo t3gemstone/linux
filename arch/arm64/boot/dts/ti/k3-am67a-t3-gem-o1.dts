@@ -596,7 +596,7 @@
 
 	csi1_gpio_pins_default: csi1-gpio-default-pins {
 		pinctrl-single,pins = <
-			J722S_IOPAD(0x01d8, PIN_OUTPUT, 7) /* (D22) MCAN0_TX.GPIO1_24 */
+			J722S_IOPAD(0x0128, PIN_OUTPUT, 7) /* (H21) MMC2_SDWP.GPIO0_72 */
 		>;
 	};
 
