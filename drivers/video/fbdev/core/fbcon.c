@@ -490,6 +490,8 @@ static int __init fb_console_setup(char *this_opt)
 			options += 9;
 			if (!strcmp(options, "center"))
 				fb_center_logo = true;
+			else if (!strcmp(options, "left"))
+				fb_center_logo = false;
 			continue;
 		}
 

@@ -100,9 +100,9 @@ const struct linux_logo * __ref fb_find_logo(int depth)
 		/* SuperH Linux logo */
 		logo = &logo_superh_clut224;
 #endif
-#ifdef CONFIG_LOGO_BEAGLE_CLUT224
-		/* Generic Linux logo */
-		logo = &logo_beagle_clut224;
+#ifdef CONFIG_LOGO_T3_GEMSTONE_CLUT224
+		/* T3 Gemstone Linux logo */
+		logo = &logo_t3_gemstone_clut224;
 #endif
 	}
 	return logo;
