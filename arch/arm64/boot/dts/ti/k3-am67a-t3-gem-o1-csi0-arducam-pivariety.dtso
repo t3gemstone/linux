@@ -91,10 +91,10 @@
 			csi2_pivariety_out: endpoint {
 				remote-endpoint = <&csi2rx0_in_pivariety>;
 
-				link-frequencies = /bits/ 64 <493500000>;
+				link-frequencies = /bits/ 64 <662000000>;
 
 				clock-lanes = <0>;
-				data-lanes = <1 2>;
+				data-lanes = <1 2 3 4>;
 				clock-noncontinuous;
 			};
 		};
@@ -117,7 +117,7 @@
 
 				bus-type = <4>;
 				clock-lanes = <0>;
-				data-lanes = <1 2>;
+				data-lanes = <1 2 3 4>;
 				clock-noncontinuous;
 			};
 		};
