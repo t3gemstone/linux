@@ -26,6 +26,7 @@
 #include <net/netdev_rx_queue.h>
 #include <net/netdev_queues.h>
 #include <net/xdp_sock_drv.h>
+#include <linux/dma-mapping.h>
 
 static int napi_weight = NAPI_POLL_WEIGHT;
 module_param(napi_weight, int, 0444);
@@ -875,6 +876,25 @@ ok:
 	return skb;
 }
 
+/* T3-GEM-O1 LOCAL PATCH: the R5F remoteproc virtio peer is not cache-
+ * coherent with the A53, and the legacy rproc vdev cannot negotiate
+ * VIRTIO_F_ACCESS_PLATFORM (32-bit resource-table feature field), so the
+ * core vring never applies DMA sync to payload buffers.  Do explicit
+ * cache maintenance against the vdev's parent (the rvdev platform
+ * device, non-coherent dma-direct) around every payload access.
+ */
+static void virtnet_cache_sync(struct virtio_device *vdev, void *buf,
+			       unsigned int len, enum dma_data_direction dir,
+			       bool for_cpu)
+{
+	struct device *dev = vdev->dev.parent;
+
+	if (for_cpu)
+		dma_sync_single_for_cpu(dev, virt_to_phys(buf), len, dir);
+	else
+		dma_sync_single_for_device(dev, virt_to_phys(buf), len, dir);
+}
+
 static void virtnet_rq_unmap(struct receive_queue *rq, void *buf, u32 len)
 {
 	struct page *page = virt_to_head_page(buf);
@@ -911,6 +931,9 @@ static void *virtnet_rq_get_buf(struct receive_queue *rq, u32 *len, void **ctx)
 	buf = virtqueue_get_buf_ctx(rq->vq, len, ctx);
 	if (buf && rq->do_dma)
 		virtnet_rq_unmap(rq, buf, *len);
+	else if (buf)	/* T3-GEM-O1: invalidate before reading peer data */
+		virtnet_cache_sync(rq->vq->vdev, buf, *len,
+				   DMA_FROM_DEVICE, true);
 
 	return buf;
 }
@@ -924,6 +947,13 @@ static void virtnet_rq_init_one_sg(struct receive_queue *rq, void *buf, u32 len)
 
 	if (!rq->do_dma) {
 		sg_init_one(rq->sg, buf, len);
+
+		/* T3-GEM-O1: write back any dirty lines so later evictions
+		 * cannot overwrite data the peer writes into this buffer.
+		 */
+
+		virtnet_cache_sync(rq->vq->vdev, buf, len,
+				   DMA_FROM_DEVICE, false);
 		return;
 	}
 
@@ -3072,6 +3102,19 @@ static int xmit_skb(struct send_queue *sq, struct sk_buff *skb, bool orphan)
 			return num_sg;
 		num_sg++;
 	}
+	{
+		/* T3-GEM-O1: push hdr+payload to memory for the
+		 * non-coherent R5F peer before publishing.
+		 */
+
+		struct scatterlist *sg;
+		int i;
+
+		for_each_sg(sq->sg, sg, num_sg, i)
+			virtnet_cache_sync(sq->vq->vdev, sg_virt(sg),
+					   sg->length, DMA_TO_DEVICE, false);
+	}
+
 	return virtqueue_add_outbuf(sq->vq, sq->sg, num_sg,
 				    skb_to_ptr(skb, orphan), GFP_ATOMIC);
 }
