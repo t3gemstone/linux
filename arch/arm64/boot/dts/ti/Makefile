@@ -590,6 +590,7 @@ dtb-$(CONFIG_ARCH_K3) += k3-am67a-t3-gem-o1-spidev0-2cs.dtbo
 dtb-$(CONFIG_ARCH_K3) += k3-am67a-t3-gem-o1-uart-ttys0.dtbo
 dtb-$(CONFIG_ARCH_K3) += k3-am67a-t3-gem-o1-uart-ttys6.dtbo
 dtb-$(CONFIG_ARCH_K3) += k3-am67a-t3-gem-o1-edgeai-apps.dtbo
+dtb-$(CONFIG_ARCH_K3) += k3-am67a-t3-gem-o1-px4-r5f.dtbo
 dtb-$(CONFIG_ARCH_K3) += k3-j721e-beagleboneai64-BBORG_MOTOR.dtbo
 dtb-$(CONFIG_ARCH_K3) += k3-j721e-beagleboneai64-pwm-epwm0-p8_13.dtbo
 dtb-$(CONFIG_ARCH_K3) += k3-j721e-beagleboneai64-pwm-epwm0-p8_13-p8_19.dtbo

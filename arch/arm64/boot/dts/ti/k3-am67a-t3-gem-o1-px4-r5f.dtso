@@ -1,0 +1,95 @@
+// SPDX-License-Identifier: GPL-2.0-only OR MIT
+/*
+ * PX4-R5F mode: disable Linux drivers for peripherals owned by MAIN R5F.
+ *
+ * Mutually exclusive with edgeai-apps.dtbo and ArduPilot enable overlays
+ * (spidev, pwm-*, uart-ttys*).
+ *
+ * Copyright (C) 2026 T3 Foundation - https://www.t3vakfi.org/
+ */
+
+/dts-v1/;
+/plugin/;
+
+/*
+ * Helper to show loaded overlays under: /proc/device-tree/chosen/overlays/
+ */
+&{/chosen} {
+	overlays {
+		k3-am67a-t3-gem-o1-px4-r5f.kernel = __TIMESTAMP__;
+	};
+};
+
+/ {
+	fragment@0 {
+		target = <&mcu_spi0>;
+		__overlay__ { status = "disabled"; };
+	};
+	fragment@1 {
+		target = <&main_uart0>;
+		__overlay__ { status = "disabled"; };
+	};
+	fragment@2 {
+		target = <&main_uart1>;
+		__overlay__ { status = "disabled"; };
+	};
+	fragment@3 {
+		target = <&main_uart6>;
+		__overlay__ { status = "disabled"; };
+	};
+	fragment@4 {
+		target = <&mcu_i2c0>;
+		__overlay__ { status = "disabled"; };
+	};
+	fragment@5 {
+		target = <&epwm0>;
+		__overlay__ { status = "disabled"; };
+	};
+	fragment@6 {
+		target = <&epwm1>;
+		__overlay__ { status = "disabled"; };
+	};
+	fragment@7 {
+		target = <&ecap0>;
+		__overlay__ { status = "disabled"; };
+	};
+	fragment@8 {
+		target = <&ecap1>;
+		__overlay__ { status = "disabled"; };
+	};
+	fragment@9 {
+		target = <&ecap2>;
+		__overlay__ { status = "disabled"; };
+	};
+	/* IMU_EN (mcu_gpio0 pin 12): base DTS gpio-hog conflicts with R5F GPIO_IMU_EN */
+	fragment@10 {
+		target = <&mcu_gpio0>;
+		__overlay__ { status = "disabled"; };
+	};
+	/*
+	 * eMMC (MMCSD0) holds the R5F parameters, mission data and logs.
+	 * Linux boots from the SD card (mmc1 alias, so it stays mmcblk1).
+	 */
+	fragment@11 {
+		target = <&sdhci0>;
+		__overlay__ { status = "disabled"; };
+	};
+	/*
+	 * DMTimer0-2: NuttX system tick (DMTimer2) and PX4 HRT (DMTimer1).
+	 * DMTimer0 is U-Boot's tick. Linux binds omap_timer to all of them,
+	 * which reprograms a timer the R5F is running when the R5F starts
+	 * before Linux (early boot from U-Boot).
+	 */
+	fragment@12 {
+		target = <&main_timer0>;
+		__overlay__ { status = "reserved"; };
+	};
+	fragment@13 {
+		target = <&main_timer1>;
+		__overlay__ { status = "reserved"; };
+	};
+	fragment@14 {
+		target = <&main_timer2>;
+		__overlay__ { status = "reserved"; };
+	};
+};
