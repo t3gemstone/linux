@@ -1,0 +1,53 @@
+# T3 Foundation Gemstone Project [t3gemstone.org]
+
+version: '3'
+
+vars:
+  ARCH: '{{ .ARCH | default "arm64" }}'
+  CROSS_COMPILE: '{{ .CROSS_COMPILE | default "aarch64-linux-gnu-" }}'
+  DEFCONFIG: '{{ .DEFCONFIG | default "t3_gem_o1_defconfig" }}'
+  LOCALVERSION: '{{ .LOCALVERSION | default "-ti" }}'
+
+tasks:
+
+  deps:
+    cmds:
+      - sudo apt-get install bc bison build-essential cpio flex gcc-aarch64-linux-gnu libncurses-dev libssl-dev make pkg-config
+
+  init:
+    cmds:
+      - make -j$(nproc) ARCH={{.ARCH}} CROSS_COMPILE={{.CROSS_COMPILE}} LOCALVERSION={{.LOCALVERSION}} {{.DEFCONFIG}}
+
+  menuconfig:
+    cmds:
+      - MENUCONFIG_COLOR=mono make -j$(nproc) ARCH={{.ARCH}} CROSS_COMPILE={{.CROSS_COMPILE}} LOCALVERSION={{.LOCALVERSION}} menuconfig
+
+  savedefconfig:
+    cmds:
+      - make -j$(nproc) ARCH={{.ARCH}} CROSS_COMPILE={{.CROSS_COMPILE}} LOCALVERSION={{.LOCALVERSION}} savedefconfig
+
+  clean:
+    cmds:
+      - make -j$(nproc) ARCH={{.ARCH}} CROSS_COMPILE={{.CROSS_COMPILE}} LOCALVERSION={{.LOCALVERSION}} mrproper
+
+  build:
+    cmds:
+      - make -j$(nproc) ARCH={{.ARCH}} CROSS_COMPILE={{.CROSS_COMPILE}} LOCALVERSION={{.LOCALVERSION}}
+
+  extmod:
+    vars:
+      MOD: '{{ .MOD | default "drivers/net/wireless/realtek/rtw88" }}'
+      KVER:
+        sh: make -s ARCH={{.ARCH}} CROSS_COMPILE={{.CROSS_COMPILE}} LOCALVERSION={{.LOCALVERSION}} kernelrelease
+    cmds:
+      - make -j$(nproc) ARCH={{.ARCH}} CROSS_COMPILE={{.CROSS_COMPILE}} LOCALVERSION={{.LOCALVERSION}} modules_prepare
+      - make -j$(nproc) ARCH={{.ARCH}} CROSS_COMPILE={{.CROSS_COMPILE}} LOCALVERSION={{.LOCALVERSION}} -C $PWD M=$PWD/{{.MOD}} modules
+      - bash scripts/extmod-deb.sh {{.MOD}} {{.KVER}} {{.ARCH}} {{.CROSS_COMPILE}} {{.LOCALVERSION}}
+
+  dist:
+    cmds:
+      - mkdir -p dist/boot/overlays
+      - cp arch/{{.ARCH}}/boot/Image dist/boot/
+      - make -j$(nproc) ARCH={{.ARCH}} CROSS_COMPILE={{.CROSS_COMPILE}} LOCALVERSION={{.LOCALVERSION}} INSTALL_MOD_PATH=$PWD/dist/ modules_install
+      - rm -f dist/lib/modules/*/build dist/lib/modules/*/source
+      - make -j$(nproc) ARCH={{.ARCH}} CROSS_COMPILE={{.CROSS_COMPILE}} LOCALVERSION={{.LOCALVERSION}} INSTALL_DTBS_PATH=$PWD/dist/boot/overlays dtbs_install
